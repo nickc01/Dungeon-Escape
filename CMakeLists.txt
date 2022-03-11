@@ -76,7 +76,20 @@ foreach(file ${RESOURCE_FILES})
 	target_compile_definitions(${PROJECT_NAME} PRIVATE RES_${CURRENT_RESOURCE_NAME}="${CURRENT_RESOURCE_PATH}")
 endforeach()
 
-target_link_libraries(${PROJECT_NAME} PUBLIC sfml-audio sfml-graphics sfml-main sfml-network sfml-system sfml-window)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC sfml-audio sfml-graphics sfml-network sfml-system sfml-window)
+
+IF (WIN32)
+	target_link_libraries(${PROJECT_NAME} PUBLIC sfml-main)
+ENDIF()
+
+find_package(Threads REQUIRED)
+if(THREADS_HAVE_PTHREAD_ARG)
+  target_compile_options(${PROJECT_NAME} PUBLIC "-pthread")
+endif()
+if(CMAKE_THREAD_LIBS_INIT)
+  target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_THREAD_LIBS_INIT})
+endif()
 
 
 

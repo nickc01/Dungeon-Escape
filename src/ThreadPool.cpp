@@ -2,13 +2,13 @@
 #include <thread> //Contains std::thread for executing code on a seperate thread
 #include <list> //Contains std::list for storing items in a linked list
 #include <mutex> //Contains std::mutex and std::recursive_mutex for resource locking and to prevent data races //Contains std::mutex and std::recursive_mutex for mutual exclusion of resources and prevents data races
-
+#include <iostream>
 
 using namespace std; //Prevents me from having to type std everywhere
 
 namespace
 {
-	bool running = false; //Whether the thread pool is running or not
+	volatile bool running = false; //Whether the thread pool is running or not
 	thread poolThread; //The actual thread
 	recursive_mutex poolMutex; //The mutex to prevent data races when adding and removing from the function list
 
@@ -26,6 +26,8 @@ void ThreadPool::Start()
 	{
 		//Start the thread
 		running = true;
+
+		std::cout << "STARTING THREAD POOL\n";
 		poolThread = thread(ThreadPoolMain);
 	}
 }
@@ -46,6 +48,7 @@ void ThreadPool::Stop()
 	//If the thread is running
 	if (running)
 	{
+		std::cout << "STOPPING THREAD POOL\n";
 		//Stop the thread and join with it
 		running = false;
 		poolThread.join();
@@ -59,16 +62,18 @@ namespace
 	//The main thread pool loop
 	void ThreadPoolMain()
 	{
+		std::cout << "RUNNING THREAD MAIN\n";
 		//Repeat untill the thread should stop running
 		while (true)
 		{
+			//This is to prevent some compilers (like GCC) from optimizing this while loop away, preventing any of the code below from getting executed
+			asm(" ");
 			//If the thread is to stop running
 			if (running == false)
 			{
 				//Break out of the loop
 				break;
 			}
-
 			//The current function to execute
 			function<void()> currentFunction;
 
@@ -85,8 +90,12 @@ namespace
 				currentFunction = std::move(threadPoolFunctions.front());
 				threadPoolFunctions.pop_front();
 			}
+			std::cout << "EXECUTING FUNCTION\n";
+			
 			//Execute the function
 			currentFunction();
 		}
+
+		std::cout << "ENDING THREAD MAIN\n";
 	}
 }

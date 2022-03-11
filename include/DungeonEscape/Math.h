@@ -4,6 +4,7 @@
 #include <array> //Contains std::array, which is a fixed array type
 #include <DungeonEscape/Direction.h> //Contains the Direction Enum for specifying the direction
 #include <DungeonEscape/Entity.h> //Contains the Entity class
+#include <math.h>
 
 namespace Math
 {

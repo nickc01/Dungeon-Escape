@@ -1,8 +1,9 @@
 #include <DungeonEscape/Renderable.h> //Contains the Renderable class for rendering to the game window
 #include <algorithm> //Contains many commonly used algorithms such as std::sort and std::find
+#include <atomic>
 
 
-std::atomic<bool> Renderable::listUpdated = false; //Whether the renderable list has been updated or not
+std::atomic<bool> Renderable::listUpdated{false}; //Whether the renderable list has been updated or not
 
 //Constructs a new renderable object
 Renderable::Renderable(bool renderingEnabled) :

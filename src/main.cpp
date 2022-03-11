@@ -63,7 +63,7 @@ int main()
 		}
 
 		//Poll the window for events
-		if (Common::MainWindow.pollEvent(e))
+		while (Common::MainWindow.pollEvent(e))
 		{
 			//If the event is to close the window
 			if (e.type == e.Closed)

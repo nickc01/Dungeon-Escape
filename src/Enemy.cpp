@@ -4,6 +4,7 @@
 #include <DungeonEscape/Math.h> //Contains many commonly used math functions
 #include <list> //Contains std::list for storing items in a linked list
 #include <DungeonEscape/ThreadPool.h> //Contains the thread pool for running code asynchronously
+#include <iostream>
 
 using namespace std; //Prevents me from having to type std everywhere
 using namespace sf; //Prevents me from having to type sf everywhere
