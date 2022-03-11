@@ -27,7 +27,6 @@ void ThreadPool::Start()
 		//Start the thread
 		running = true;
 
-		std::cout << "STARTING THREAD POOL\n";
 		poolThread = thread(ThreadPoolMain);
 	}
 }
@@ -48,7 +47,6 @@ void ThreadPool::Stop()
 	//If the thread is running
 	if (running)
 	{
-		std::cout << "STOPPING THREAD POOL\n";
 		//Stop the thread and join with it
 		running = false;
 		poolThread.join();
@@ -62,7 +60,6 @@ namespace
 	//The main thread pool loop
 	void ThreadPoolMain()
 	{
-		std::cout << "RUNNING THREAD MAIN\n";
 		//Repeat untill the thread should stop running
 		while (true)
 		{
@@ -92,12 +89,9 @@ namespace
 				currentFunction = std::move(threadPoolFunctions.front());
 				threadPoolFunctions.pop_front();
 			}
-			std::cout << "EXECUTING FUNCTION\n";
 			
 			//Execute the function
 			currentFunction();
 		}
-
-		std::cout << "ENDING THREAD MAIN\n";
 	}
 }
