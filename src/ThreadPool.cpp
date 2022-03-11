@@ -67,7 +67,9 @@ namespace
 		while (true)
 		{
 			//This is to prevent some compilers (like GCC) from optimizing this while loop away, preventing any of the code below from getting executed
+#ifndef _MSC_VER
 			asm(" ");
+#endif
 			//If the thread is to stop running
 			if (running == false)
 			{
