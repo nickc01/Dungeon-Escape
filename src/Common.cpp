@@ -95,6 +95,8 @@ namespace Common
     //The main render window the game will take place in
     SDL_Window* MainWindow;
     SDL_Surface* MainWindowSurface;
+    SDL_Renderer* MainWindowRenderer;
+    Vector2f CameraPosition;
 }
 
 
@@ -394,8 +396,10 @@ bool Common::SpritesIntersect(const Sprite& A, const Sprite& B, bool scaleByText
 }*/
 
 //Refreshes the size of the window. This is normally used when the window gets resized
-void Common::RefreshWindow(SDL_Window* window)
+void Common::RefreshWindow(SDL_Renderer* renderer)
 {
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
     /*//Get the current window view
     auto view = window.getView();
     //Reset the view's size
@@ -452,4 +456,11 @@ Vector2f Common::GetWindowDimensions()
     SDL_GetWindowSize(Common::MainWindow, &w, &h);
 
     return Vector2f(w, h);
+}
+
+bool Common::WindowInFocus(SDL_Window* window)
+{
+    auto flags = SDL_GetWindowFlags(Common::MainWindow);
+
+    return flags & SDL_WINDOW_INPUT_FOCUS;
 }

@@ -5,7 +5,6 @@
 #include <DungeonEscape/MagicOrb.h>
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
 
 namespace
 {
@@ -15,42 +14,44 @@ namespace
 	constexpr float STUN_FORCE = 60.0f; //How fast the enemy should bounce back when stunned
 }
 
-ResourceTexture SkeletonEnemy::skeletonSheet{RES_SKELETONSHEET}; //The resource texture of the skeleton texture sheet
+const char* SkeletonEnemy::skeletonSheet{RES_SKELETONSHEET}; //The resource texture of the skeleton texture sheet
 
-SkeletonEnemy::SkeletonEnemy(const WorldMap& map, sf::Vector2f spawnPoint) :
+SkeletonEnemy::SkeletonEnemy(const WorldMap& map, Vector2f spawnPoint) :
 	Enemy(map)
 {
+	auto sprite = Sprite(skeletonSheet);
+
 	//Setup the animation sheet
-	EmplaceSprite("UP", skeletonSheet.GetTexture(), IntRect(0, 9, 6, 8));
-	EmplaceSprite("UP", skeletonSheet.GetTexture(), IntRect(7, 9, 6, 8));
-	EmplaceSprite("UP", skeletonSheet.GetTexture(), IntRect(14, 9, 6, 8));
+	AddSprite("UP", sprite, Rect<int>(0, 9, 6, 8));
+	AddSprite("UP", sprite, Rect<int>(7, 9, 6, 8));
+	AddSprite("UP", sprite, Rect<int>(14, 9, 6, 8));
 
-	EmplaceSprite("RIGHT", skeletonSheet.GetTexture(), IntRect(0, 9, 6, 8));
-	EmplaceSprite("RIGHT", skeletonSheet.GetTexture(), IntRect(7, 9, 6, 8));
-	EmplaceSprite("RIGHT", skeletonSheet.GetTexture(), IntRect(14, 9, 6, 8));
+	AddSprite("RIGHT", sprite, Rect<int>(0, 9, 6, 8));
+	AddSprite("RIGHT", sprite, Rect<int>(7, 9, 6, 8));
+	AddSprite("RIGHT", sprite, Rect<int>(14, 9, 6, 8));
 
-	EmplaceSprite("DOWN", skeletonSheet.GetTexture(), IntRect(0, 0, 6, 8));
-	EmplaceSprite("DOWN", skeletonSheet.GetTexture(), IntRect(7, 0, 6, 8));
-	EmplaceSprite("DOWN", skeletonSheet.GetTexture(), IntRect(14, 0, 6, 8));
+	AddSprite("DOWN", sprite, Rect<int>(0, 0, 6, 8));
+	AddSprite("DOWN", sprite, Rect<int>(7, 0, 6, 8));
+	AddSprite("DOWN", sprite, Rect<int>(14, 0, 6, 8));
 
-	EmplaceSprite("LEFT", skeletonSheet.GetTexture(), IntRect(0, 9, 6, 8));
-	EmplaceSprite("LEFT", skeletonSheet.GetTexture(), IntRect(7, 9, 6, 8));
-	EmplaceSprite("LEFT", skeletonSheet.GetTexture(), IntRect(14, 9, 6, 8));
+	AddSprite("LEFT", sprite, Rect<int>(0, 9, 6, 8));
+	AddSprite("LEFT", sprite, Rect<int>(7, 9, 6, 8));
+	AddSprite("LEFT", sprite, Rect<int>(14, 9, 6, 8));
 
 	//Set the down animation as the default animation 
 	SetAnimationGroup("DOWN");
 
 	//Get the texture rect of the skeleton sprite
-	auto rect = GetSprite()->getTextureRect();
+	//auto rect = GetSprite()->getTextureRect();
 
 	//Set the render layer
 	SetRenderLayer(8);
 
 	//Set the skeleton to the specified spawnpoint
-	GetSprite()->setPosition(spawnPoint);
+	GetSprite()->position = spawnPoint;
 
 	//Set the sprite's origin to the center of the texture
-	GetSprite()->setOrigin(rect.width / 2.0f, rect.height / 2.0f);
+	//GetSprite()->setOrigin(rect.width / 2.0f, rect.height / 2.0f);
 
 	//Enable updating
 	UpdateReceiver::SetActive(true);
@@ -60,7 +61,7 @@ SkeletonEnemy::SkeletonEnemy(const WorldMap& map, sf::Vector2f spawnPoint) :
 }
 
 //The update loop for the skeleton
-void SkeletonEnemy::Update(sf::Time dt)
+void SkeletonEnemy::Update(double dt)
 {
 	//If the enemy is no longer alive
 	if (!IsAlive())
@@ -69,7 +70,7 @@ void SkeletonEnemy::Update(sf::Time dt)
 		return;
 	}
 	//Get the time between the last frame and this frame
-	float time = dt.asSeconds();
+	float time = dt;
 	//If the enemy is stunned
 	if (stunned)
 	{
@@ -80,7 +81,7 @@ void SkeletonEnemy::Update(sf::Time dt)
 		if (stunTimer <= 0.0f)
 		{
 			//Set the sprite's color back to normal
-			GetSprite()->setColor(Color(255,255,255));
+			//GetSprite()->setColor(Color(255,255,255));
 			//The enemy is no longer stunned
 			stunned = false;
 		}
@@ -153,7 +154,7 @@ void SkeletonEnemy::Update(sf::Time dt)
 		if (pathToPlayer.size() > 0)
 		{
 			//Move towards the next point in the path
-			Vector2f distanceToNextPoint = pathToPlayer.front() - GetSprite()->getPosition();
+			Vector2f distanceToNextPoint = pathToPlayer.front() - GetSprite()->position;
 			Vector2f amountToMove = Math::NormalizeVector(distanceToNextPoint, movementSpeed * time);
 
 			//Move towards the points
@@ -174,25 +175,25 @@ void SkeletonEnemy::Update(sf::Time dt)
 					//If the enemy is traveling up
 				case Direction::Up:
 					SetAnimationGroup("UP"); //Use the walking up sanimation
-					GetSprite()->setScale({ 1.0f, 1.0f }); //Reset the scaling to normal
+					GetSprite()->scale = { 1.0f, 1.0f }; //Reset the scaling to normal
 					break;
 
 					//If the enemy is traveling right
 				case Direction::Right:
 					SetAnimationGroup("RIGHT"); //Use the walking right animation
-					GetSprite()->setScale({ 1.0f, 1.0f }); //Reset the scaling to normal
+					GetSprite()->scale = { 1.0f, 1.0f }; //Reset the scaling to normal
 					break;
 
 					//If the enemy is traveling down
 				case Direction::Down:
 					SetAnimationGroup("DOWN"); //Use the walking down animation
-					GetSprite()->setScale({ 1.0f, 1.0f }); //Reset the scaling to normal
+					GetSprite()->scale = { 1.0f, 1.0f }; //Reset the scaling to normal
 					break;
 
 					//If the enemy is traveling left
 				case Direction::Left:
 					SetAnimationGroup("LEFT");//Use the walking left animation
-					GetSprite()->setScale({ -1.0f, 1.0f }); //Flip the sprite to the left
+					GetSprite()->scale = { -1.0f, 1.0f }; //Flip the sprite to the left
 					break;
 				}
 			}
@@ -201,7 +202,7 @@ void SkeletonEnemy::Update(sf::Time dt)
 			UpdateAnimations(dt);
 
 			//If we are close enough to the next point in the path
-			if (Math::DistanceBetweenVectors(pathToPlayer.front(), GetSprite()->getPosition()) <= 1.0f)
+			if (Math::DistanceBetweenVectors(pathToPlayer.front(), GetSprite()->position) <= 1.0f)
 			{
 				//Remove the point and move on to the next
 				pathToPlayer.pop_front();
@@ -227,11 +228,11 @@ void SkeletonEnemy::Update(sf::Time dt)
 				//Make the enemy stunned
 				stunned = true;
 				//Make the enemy move away from the orb
-				stunDirection = Math::NormalizeVector(GetSprite()->getPosition() - orb->GetSprite()->getPosition(), STUN_FORCE);
+				stunDirection = Math::NormalizeVector(GetSprite()->position - orb->GetSprite()->position, STUN_FORCE);
 				//Reset the stun timer
 				stunTimer = STUN_DURATION;
 				//Make the enemy sprite blue
-				GetSprite()->setColor(Color(128, 128, 255));
+				//GetSprite()->setColor(Color(128, 128, 255));
 			}
 		}
 

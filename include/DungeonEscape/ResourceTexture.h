@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 //#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
 
@@ -33,5 +33,5 @@ public:
 
 	//Gets the texture that was loaded
 	SDL_Surface* GetTexture();
-};
+};*/
 

@@ -2,7 +2,6 @@
 #include <DungeonEscape/Room.h> //Contains the Room class that represents individual rooms in the game
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
 
 //Creates all the tiles that make up the branch
 void Branch::CreateTiles()
@@ -127,7 +126,7 @@ void Branch::BuildJointPiece(Direction direction, Vector2i position)
 }
 
 //Builds a new straight piece at the specified position
-void Branch::BuildStraightPiece(Direction direction, sf::Vector2i position)
+void Branch::BuildStraightPiece(Direction direction, Vector2i position)
 {
 	//Get the leftwards direction
 	auto leftDirection = RotateDirection(direction, -90);
@@ -148,7 +147,7 @@ void Branch::BuildStraightPiece(Direction direction, sf::Vector2i position)
 }
 
 //Builds a curve piece at the specified position
-void Branch::BuildCurvePiece(Direction from, Direction to, sf::Vector2i position)
+void Branch::BuildCurvePiece(Direction from, Direction to, Vector2i position)
 {
 	//Get the direction to the left of the source direction
 	auto leftDirection = RotateDirection(from, -90);
@@ -305,7 +304,7 @@ bool Branch::Intersects(Branch& other)
 				continue;
 			}
 			//If the tiles intersect each other
-			else if (Common::SpritesIntersect(tileA->GetSprite(),tileB->GetSprite(),true))
+			else if (Common::SpritesIntersect(tileA->GetSprite(),tileB->GetSprite()))
 			{
 				//An intersection has occured, return true
 				return true;

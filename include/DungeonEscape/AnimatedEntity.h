@@ -33,10 +33,16 @@ public:
 	void SetAnimationGroup(std::string animationGroup);
 
 	//Adds an existing sprite to an animation group
-	void AddSprite(std::string group,Sprite sprite);
+	void AddSprite(std::string group, Sprite& sprite, Rect<int> rect, Vector2f scale);
+
+	//Adds an existing sprite to an animation group
+	void AddSprite(std::string group, Sprite& sprite, Rect<int> rect);
+
+	//Adds an existing sprite to an animation group
+	void AddSprite(std::string group,Sprite& sprite);
 
 	//Constructs a new sprite and adds it to an animation group
-	void EmplaceSprite(std::string group, Texture& texture, Rect<int> rect, Vector2f scale = Vector2f(1.0f, 1.0f));
+	void EmplaceSprite(std::string group, const char* texture, Rect<int> rect, Vector2f scale = Vector2f(1.0f, 1.0f));
 
 	//The update function for the entity
 	virtual void Update(double dt) override = 0;

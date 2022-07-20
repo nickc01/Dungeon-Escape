@@ -61,10 +61,19 @@ add_executable(${PROJECT_NAME}	"src/main.cpp"
 								"include/DungeonEscape/SkeletonEnemy.h"
 								"include/DungeonEscape/ThreadPool.h"
 								"include/DungeonEscape/UpdateReceiver.h"
-								"include/DungeonEscape/WorldMap.h" "include/DungeonEscape/Sprite.h" "src/Sprite.cpp"  "include/DungeonEscape/Vector2.h" "include/DungeonEscape/Rect.h")
+								"include/DungeonEscape/WorldMap.h" "include/DungeonEscape/Sprite.h" "src/Sprite.cpp"  "include/DungeonEscape/Vector2.h" "include/DungeonEscape/Rect.h" "include/DungeonEscape/Input.h" "src/Input.cpp")
 
 add_subdirectory(lib/SDL2)
 add_subdirectory(lib/SDL2_image)
+add_subdirectory(lib/SDL_ttf)
+
+set(sdl2_INCLUDE_DIR "lib/SDL2/include")
+set(sdl2_LIBRARY SDL2)
+set(sdl2main_LIBRARY SDL2main)
+set(sdl2_ttf_INCLUDE_DIR "lib/SDL_ttf")
+set(sdl2_ttf_LIBRARY SDL2_ttf)
+
+add_subdirectory(lib/SDL_FontCache)
 
 IF(UNIX)
     add_definitions("-fPIC")
@@ -83,7 +92,7 @@ foreach(file ${RESOURCE_FILES})
 endforeach()
 
 
-target_link_libraries(${PROJECT_NAME} PUBLIC SDL2 SDL2main SDL2_image)
+target_link_libraries(${PROJECT_NAME} PUBLIC SDL2 SDL2main SDL2_image SDL2_ttf FontCache)
 
 #IF (WIN32)
 #	target_link_libraries(${PROJECT_NAME} PUBLIC sfml-main)

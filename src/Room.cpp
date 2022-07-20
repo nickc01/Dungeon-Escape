@@ -2,7 +2,6 @@
 #include <DungeonEscape/Branch.h> //Contains the Branch class for creating paths to connect rooms
 #include <DungeonEscape/Math.h> //Contains many commonly used math functions
 
-using namespace sf; //Prevents me from having to type sf everywhere
 using namespace std; //Prevents me from having to type std everywhere
 
 //Finds an room that has a spot avaiable for a new branch to be installed
@@ -319,13 +318,13 @@ void Room::SetBranch(Direction direction, std::shared_ptr<Branch> branch)
 }
 
 //Returns the list of all enemy spawnpoints
-const std::vector<sf::Vector2i>& Room::GetEnemySpawnPoints() const
+const std::vector<Vector2i>& Room::GetEnemySpawnPoints() const
 {
 	return enemySpawnPoints;
 }
 
 //Returns the list of all enemy spawnpoints
-std::vector<sf::Vector2i>& Room::GetEnemySpawnPoints()
+std::vector<Vector2i>& Room::GetEnemySpawnPoints()
 {
 	return enemySpawnPoints;
 }
@@ -337,9 +336,9 @@ bool Room::Intersects(const BackgroundTile& tile) const
 	//Get the rect bounds of the room
 	auto rectA = Rect<float>(GetRect());
 	//Get the rect bounds of the background tile
-	auto rectB = tile.GetSprite().getGlobalBounds();
+	auto rectB = tile.GetSprite().GetGlobalRect();
 
-	auto tileSize = tile.GetSprite().getTextureRect();
+	auto tileSize = tile.GetSprite().GetGlobalRect();
 
 	//Divide the bounds of the tile with it's textureSize
 	rectB.width /= tileSize.width;
@@ -472,10 +471,10 @@ void Room::AddRoomToHierarchy(shared_ptr<Room> destinationRoom)
 		auto rect = sourceRoom.GetRect();
 
 		//Get the left, right, top, and bottom sides of the available room rect
-		int left = rect.left;
-		int right = rect.left + rect.width - 1;
-		int top = rect.top - 1;
-		int bottom = rect.top - rect.height;
+		int left = rect.x;
+		int right = rect.x + rect.width - 1;
+		int top = rect.y + rect.height - 1;
+		int bottom = rect.y + rect.height - rect.height;
 
 
 		//If we are adding to the top part of the available room
@@ -530,22 +529,22 @@ void Room::AddRoomToHierarchy(shared_ptr<Room> destinationRoom)
 			//If the branch is going up
 		case Direction::Up:
 			//Set the destination room's center to line up with the end point of the destination
-			DestinationCenter = Vector2<int>(EndPoint.x, EndPoint.y + (destCenter.y - (destRect.top - destRect.height)));
+			DestinationCenter = Vector2<int>(EndPoint.x, EndPoint.y + (destCenter.y - (destRect.y + destRect.height - destRect.height)));
 			break;
 			//If the branch is going right
 		case Direction::Right:
 			//Set the destination room's center to line up with the end point of the destination
-			DestinationCenter = Vector2<int>(EndPoint.x + (destCenter.x - destRect.left), EndPoint.y);
+			DestinationCenter = Vector2<int>(EndPoint.x + (destCenter.x - destRect.x), EndPoint.y);
 			break;
 			//If the branch is going down
 		case Direction::Down:
 			//Set the destination room's center to line up with the end point of the destination
-			DestinationCenter = Vector2<int>(EndPoint.x, EndPoint.y - (destRect.top - destCenter.y) + 1);
+			DestinationCenter = Vector2<int>(EndPoint.x, EndPoint.y - (destRect.y + destRect.height - destCenter.y) + 1);
 			break;
 			//If the branch is going left
 		case Direction::Left:
 			//Set the destination room's center to line up with the end point of the destination
-			DestinationCenter = Vector2<int>(EndPoint.x - (destRect.left + destRect.width - destCenter.x) + 1, EndPoint.y);
+			DestinationCenter = Vector2<int>(EndPoint.x - (destRect.x + destRect.width - destCenter.x) + 1, EndPoint.y);
 			break;
 		}
 

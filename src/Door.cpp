@@ -1,15 +1,15 @@
 #include <DungeonEscape/Door.h> //Contains the Door class, which is where the player enters to win the game
 
 Door* Door::currentDoor = nullptr; //A singleton that represents the current door in the world map
-ResourceTexture Door::doorTexture{ RES_DOOR }; //The door's resource texture
+const char* Door::doorTexture{ RES_DOOR }; //The door's resource texture
 
 //Constructs a new door
-Door::Door(sf::Vector2f doorPosition) :
+Door::Door(Vector2f doorPosition) :
 	//Set the doors sprite to the resource texture
-	doorSprite(doorTexture.GetTexture())
+	doorSprite(doorTexture)
 {
 	//Set the sprite's position
-	doorSprite.setPosition(doorPosition);
+	doorSprite.position = doorPosition;
 	//Set it's render layer
 	SetRenderLayer(5);
 	//Update the singleton
@@ -26,7 +26,7 @@ Door* Door::GetDoor()
 }
 
 //Gets the sprite of the door
-const sf::Sprite& Door::GetSprite() const
+const Sprite& Door::GetSprite() const
 {
 	return doorSprite;
 }
@@ -42,8 +42,9 @@ Door::~Door()
 }
 
 //Called when the dialog box is to be rendered
-void Door::Render(sf::RenderWindow& window)
+void Door::Render(SDL_Renderer* renderer)
 {
 	//Draw the door sprite
-	window.draw(doorSprite);
+	//window.draw(doorSprite);
+	doorSprite.DrawSprite(renderer);
 }

@@ -2,43 +2,77 @@
 #include <tuple>
 
 template<typename T>
-struct Vector2 : std::tuple<float, float>
+struct Vector2
 {
-	constexpr Vector2() : std::tuple<T, T>() {}
+	T x;
+	T y;
 
+	constexpr Vector2() {}
 
-	constexpr Vector2(T x, T y) : std::tuple<T, T>(x, y) {}
-
-	constexpr T GetX() const
-	{
-		return (T)std::get<0>(*this);
-	}
-
-	constexpr T GetY() const
-	{
-		return (T)std::get<1>(*this);
-	}
-
-	constexpr void SetX(T value)
-	{
-		std::get<0>(*this) = value;
-	}
-
-	constexpr void SetY(T value)
-	{
-		std::get<1>(*this) = value;
-	}
+	constexpr Vector2(T X, T Y) : x(X), y(Y) {}
 
 	constexpr bool operator==(const Vector2<T>& other) const
 	{
-		return GetX() == other.GetX() && GetY() == other.GetY();
+		return x == other.x && y == other.y;
+	}
+
+	constexpr bool operator!=(const Vector2<T>& other) const
+	{
+		return x != other.x || y != other.y;
 	}
 
 	constexpr Vector2<T>& operator+=(const Vector2<T>& rhs) 
 	{
-		SetX(GetX() + rhs.GetX());
-		SetY(GetY() + rhs.GetY());
+		x += rhs.x;
+		y += rhs.y;
 		return *this;
+	}
+
+	constexpr Vector2<T>& operator-=(const Vector2<T>& rhs)
+	{
+		x -= rhs.x;
+		y -= rhs.y;
+		return *this;
+	}
+
+	constexpr Vector2<T> operator+(const Vector2<T>& rhs)
+	{
+		return Vector2<T>(x + rhs.x, y + rhs.y);
+	}
+
+	constexpr Vector2<T> operator-(const Vector2<T>& rhs)
+	{
+		return Vector2<T>(x - rhs.x, y - rhs.y);
+	}
+
+	constexpr Vector2<T> operator*(const T& rhs)
+	{
+		return Vector2<T>(x * rhs, y * rhs);
+	}
+
+	constexpr Vector2<T> operator/(const T& rhs)
+	{
+		return Vector2<T>(x / rhs, y / rhs);
+	}
+
+	constexpr Vector2<T> operator*=(const T& rhs)
+	{
+		x *= rhs;
+		y *= rhs;
+		return *this;
+	}
+
+	constexpr Vector2<T> operator/=(const T& rhs)
+	{
+		x /= rhs;
+		y /= rhs;
+		return *this;
+	}
+
+	template<typename OtherT>
+	constexpr operator Vector2<OtherT>() const
+	{
+		return Vector2<OtherT>(static_cast<OtherT>(x), static_cast<OtherT>(y));
 	}
 };
 

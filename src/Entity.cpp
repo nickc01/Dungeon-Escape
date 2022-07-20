@@ -164,8 +164,8 @@ RectF Entity::GetHitBoxGlobalBounds() const
 	auto originOffset = sprite->GetOriginPosOffset();
 
 	//Add the position and origin to the bounds
-	bounds.x += (position.GetX() + originOffset.GetX());
-	bounds.y += (position.GetY() + originOffset.GetY());
+	bounds.x += (position.x + originOffset.x);
+	bounds.y += (position.y + originOffset.y);
 
 	return bounds;
 }
@@ -194,7 +194,7 @@ void Entity::Move(Vector2f direction)
 	}
 
 	//if the direction is not facing a cardinal direction
-	if (direction.GetX() != 0 && direction.GetY() != 0)
+	if (direction.x != 0 && direction.y != 0)
 	{
 		//Get the x and y components of the vector
 		auto directionComponents = Math::VectorComponents(direction);
@@ -220,33 +220,33 @@ void Entity::Move(Vector2f direction)
 			//If we are moving up
 		case Direction::Up:
 			//Clamp the y component to be less than or equal to the distance to the wall
-			if (direction.GetY() > distanceToWall)
+			if (direction.y > distanceToWall)
 			{
-				direction.SetY(distanceToWall);
+				direction.y = distanceToWall;
 			}
 			break;
 			//If we are moving up
 		case Direction::Right:
 			//Clamp the xs component to be less than or equal to the distance to the wall
-			if (direction.GetX() > distanceToWall)
+			if (direction.x > distanceToWall)
 			{
-				direction.SetX(distanceToWall);
+				direction.x = distanceToWall;
 			}
 			break;
 			//If we are moving up
 		case Direction::Down:
 			//Clamp the y component to be less than or equal to the distance to the wall
-			if (direction.GetY() < -distanceToWall)
+			if (direction.y < -distanceToWall)
 			{
-				direction.SetY(-distanceToWall);
+				direction.y = -distanceToWall;
 			}
 			break;
 			//If we are moving up
 		case Direction::Left:
 			//Clamp the x component to be less than or equal to the distance to the wall
-			if (direction.GetX() < -distanceToWall)
+			if (direction.x < -distanceToWall)
 			{
-				direction.SetX(-distanceToWall);
+				direction.x = -distanceToWall;
 			}
 			break;
 		}
@@ -307,8 +307,8 @@ float Entity::GetDistanceToWall(Array2D<BackgroundTile*>& tiles, Direction direc
 	auto bounds = GetHitBoxGlobalBounds();
 
 	//Subtract an offset if specified
-	bounds.x -= offset.GetX();
-	bounds.y -= offset.GetY();
+	bounds.x -= offset.x;
+	bounds.y -= offset.y;
 
 	//The distance to the closest wall in the specified direction
 	float nearestDistance = INFINITY;
@@ -442,8 +442,8 @@ bool Entity::IsTouchingWall(Vector2f offset) const
 	auto bounds = GetHitBoxGlobalBounds();
 
 	//Apply an offset if specified
-	bounds.x -= offset.GetX();
-	bounds.y -= offset.GetY();
+	bounds.x -= offset.x;
+	bounds.y -= offset.y;
 
 	//Gets all the tiles surrounding the entity
 	auto tiles = GetTilesAroundEntity();

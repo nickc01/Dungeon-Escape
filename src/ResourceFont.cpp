@@ -1,4 +1,4 @@
-#include <DungeonEscape/ResourceFont.h> //Contains the ResourceFont class, which is used to load font resources
+/*#include <DungeonEscape/ResourceFont.h> //Contains the ResourceFont class, which is used to load font resources
 
 //Constructs and loads the font into memory
 ResourceFont::ResourceFont(std::string file_path)
@@ -27,4 +27,4 @@ const sf::Font& ResourceFont::GetFont() const
 sf::Font& ResourceFont::GetFont()
 {
 	return font;
-}
+}*/

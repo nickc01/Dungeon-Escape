@@ -1,8 +1,6 @@
-#pragma once
+/*#pragma once
 
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
 #include <string>
-#include <SFML/System.hpp>
 
 //Loads a SFML font from a resource
 class ResourceFont
@@ -26,5 +24,5 @@ public:
 
 	//Gets the font that was loaded
 	sf::Font& GetFont();
-};
+};*/
 

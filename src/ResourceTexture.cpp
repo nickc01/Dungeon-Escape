@@ -1,4 +1,4 @@
-#include <DungeonEscape/ResourceTexture.h> //Contains the ResourceTexture class for loading in texture resources
+/*#include <DungeonEscape/ResourceTexture.h> //Contains the ResourceTexture class for loading in texture resources
 #include <SDL_image.h>
 
 //using namespace sf; //Prevents me from having to type sf everywhere
@@ -34,4 +34,4 @@ const SDL_Surface* ResourceTexture::GetTexture() const
 SDL_Surface* ResourceTexture::GetTexture()
 {
 	return texture;
-}
+}*/

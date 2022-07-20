@@ -87,7 +87,7 @@ namespace Common
 	//bool SpritesIntersect(const Sprite& A, const Sprite& B, bool scaleByTextureSize);
 
 	//Refreshes the size of the window. This is normally used when the window gets resized
-	void RefreshWindow(SDL_Window* window = Common::MainWindow);
+	void RefreshWindow(SDL_Renderer* renderer = Common::MainWindowRenderer);
 	//Gets the mouse position in world coordinates
 	Vector2f GetMouseWorldCoordinates(SDL_Window* window = Common::MainWindow);
 
@@ -96,6 +96,8 @@ namespace Common
 
 	//Gets a random number between the minRange (inclusive) and the maxRange (exclusive)
 	int RandomNumber(int minRange, int maxRange);
+
+	bool WindowInFocus(SDL_Window* window = Common::MainWindow);
 
 
 	Vector2f GetWindowDimensions();

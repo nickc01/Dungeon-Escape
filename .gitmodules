@@ -7,3 +7,9 @@
 [submodule "lib/SDL2_image"]
 	path = lib/SDL2_image
 	url = https://github.com/libsdl-org/SDL_image.git
+[submodule "lib/SDL_ttf"]
+	path = lib/SDL_ttf
+	url = https://github.com/libsdl-org/SDL_ttf.git
+[submodule "lib/SDL_FontCache"]
+	path = lib/SDL_FontCache
+	url = https://github.com/grimfang4/SDL_FontCache.git

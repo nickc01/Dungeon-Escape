@@ -1,16 +1,17 @@
 #include <DungeonEscape/HeartDisplay.h> //Contains the HeartDisplay class for displaying the amount of hearts the player has 
+#include <DungeonEscape/Common.h>
+#include <DungeonEscape/Vector2.h>
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
 
 
-ResourceTexture HeartDisplay::heartTexture{RES_HEART}; //The texture resource for the heart display
+const char* HeartDisplay::heartTexture{RES_HEART}; //The texture resource for the heart display
 
 
 //Constructs a new heart display
 HeartDisplay::HeartDisplay(const Player& player) :
 	player(player),
-	heartSprite(heartTexture.GetTexture())
+	heartSprite(heartTexture)
 {
 	//Set the render layer
 	SetRenderLayer(100);
@@ -20,9 +21,23 @@ HeartDisplay::HeartDisplay(const Player& player) :
 }
 
 //Renders the heart display to the screen
-void HeartDisplay::Render(sf::RenderWindow& window)
+void HeartDisplay::Render(SDL_Renderer* renderer)
 {
-	//Store the old camera view
+
+	auto windowSize = Common::GetWindowDimensions();
+
+	auto startPosition = Vector2f(windowSize.x / 2.0f, windowSize.y / 2.0f);
+
+	for (int i = 0; i < player.GetHealth(); i++)
+	{
+		//Set the position of the heart sprite to the starting position
+		heartSprite.position = startPosition;
+		//Draw the sprite
+		heartSprite.DrawSpriteUI(renderer);
+		//Move the start position to the left for the next sprite
+		startPosition = startPosition - Vector2f(heartSprite.GetTextureRect().width, 0.0f);
+	}
+	/*//Store the old camera view
 	auto oldView = window.getView();
 
 	//Get the window's size
@@ -60,5 +75,5 @@ void HeartDisplay::Render(sf::RenderWindow& window)
 	}
 
 	//Set the old view
-	window.setView(oldView);
+	window.setView(oldView);*/
 }

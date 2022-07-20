@@ -7,7 +7,6 @@
 #include <iostream>
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
 
 namespace
 {
@@ -79,10 +78,10 @@ PathResult Enemy::GeneratePathToPlayer()
 	}
 
 	//Get the player's position
-	auto playerPos = player->GetSprite()->getPosition();
+	auto playerPos = player->GetSprite()->position;
 
 	//Get the enemy position
-	auto enemyPos = GetSprite()->getPosition();
+	auto enemyPos = GetSprite()->position;
 
 	//Get the size of each tile
 	auto mapTileSize = GetMap().GetTileSize();
@@ -198,7 +197,7 @@ PathResult Enemy::GeneratePathToPlayer()
 	shared_ptr<Node> nodePath = targetNode;
 
 	//Stores the final path the enemy will take to get to the player
-	std::list<sf::Vector2f> Path;
+	std::list<Vector2f> Path;
 
 	//Repeat untill there are no more nodes left to iterate
 	while (nodePath != nullptr)
@@ -264,7 +263,7 @@ PathResult::PathResult()
 }
 
 //Constructs a new results object with the specified parameters
-PathResult::PathResult(const std::list<sf::Vector2f>& path, bool success) :
+PathResult::PathResult(const std::list<Vector2f>& path, bool success) :
 	Path(path),
 	Success(success)
 {
@@ -272,7 +271,7 @@ PathResult::PathResult(const std::list<sf::Vector2f>& path, bool success) :
 }
 
 //Constructs a new results object with the specified parameters
-PathResult::PathResult(std::list<sf::Vector2f>&& path, bool success) :
+PathResult::PathResult(std::list<Vector2f>&& path, bool success) :
 	Path(std::move(path)),
 	Success(success)
 {

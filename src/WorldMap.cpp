@@ -4,7 +4,6 @@
 #include <DungeonEscape/Math.h> //Contains many commonly used math functions
 
 
-using namespace sf; //Prevents me from having to type sf everywhere
 using namespace std; //Prevents me from having to type std everywhere
 
 namespace
@@ -84,9 +83,9 @@ void WorldMap::Flatten()
 		Rect<int> roomRect = room->GetRect();
 
 		//If it's bottom left corner is lower than the stored one, then update it
-		BottomLeft = SmallestParts(BottomLeft, { roomRect.left,roomRect.top - roomRect.height });
+		BottomLeft = SmallestParts(BottomLeft, { roomRect.x,roomRect.y + roomRect.height - roomRect.height });
 		//If it's top right corner is higher than the stored one, then update it
-		TopRight = GreatestParts(TopRight, { roomRect.left + roomRect.width,roomRect.top });
+		TopRight = GreatestParts(TopRight, { roomRect.x + roomRect.width,roomRect.y + roomRect.height });
 	}
 
 	//Get the dimensions of the world map
@@ -106,7 +105,7 @@ void WorldMap::Flatten()
 	int loopCounter = 0; //Keeps track of how many rooms and branches have currently been iterated over
 
 	//Stores the size of each tile
-	tileSize = Vector2u(0, 0);
+	tileSize = Vector2<unsigned int>(0, 0);
 
 	//Loop over all the rooms in the hierarchy
 	for (Room* room : rooms)
@@ -115,7 +114,7 @@ void WorldMap::Flatten()
 		Rect<int> roomRect = room->GetRect();
 
 		//Get the bottomleft corner of the room
-		Vector2i RoomBottomLeft = Vector2<int>(roomRect.left, roomRect.top - roomRect.height);
+		Vector2i RoomBottomLeft = Vector2<int>(roomRect.x, roomRect.y + roomRect.height - roomRect.height);
 
 		//Loop over all the tiles in the room
 		for (int x = 0; x < room->GetWidth(); x++)
@@ -132,13 +131,13 @@ void WorldMap::Flatten()
 				auto& tile = room->GetTile(relativePos);
 
 				//Get and store the size of the tile
-				tileSize = tile->GetSprite().getTexture()->getSize();
+				tileSize = tile->GetSprite().GetSize();
 
 				//Get the world space position of the tile
 				Vector2<float> tilePosition = Vector2<float>(static_cast<float>(layerPos.x * tileSize.x), static_cast<float>(layerPos.y * tileSize.y));
 
 				//Set the tile's world space position
-				tile->GetSprite().setPosition(tilePosition);
+				tile->GetSprite().position = tilePosition;
 
 				//Add the tile to the tile grid
 				tiles[layerPos] = tile;
@@ -150,7 +149,7 @@ void WorldMap::Flatten()
 		if (room == TopRoom.get())
 		{
 			//Set the player's spawnpoint to be at the center of the room
-			SpawnPoint = (room->GetDimensions() / 2) + Vector2<int>(roomRect.left, roomRect.top - roomRect.height) - BottomLeft;
+			SpawnPoint = (room->GetDimensions() / 2) + Vector2<int>(roomRect.x, roomRect.y + roomRect.height - roomRect.height) - BottomLeft;
 			SpawnPoint = Vector2i(SpawnPoint.x * tileSize.x, SpawnPoint.y * tileSize.y);
 		}
 
@@ -172,16 +171,16 @@ void WorldMap::Flatten()
 		for (auto tile : branch->GetTiles())
 		{
 			//Get the map map coordinates of the tile
-			Vector2<int> layerPos = Vector2<int>(tile->GetSprite().getPosition()) - BottomLeft;
+			Vector2<int> layerPos = Vector2<int>(tile->GetSprite().position) - BottomLeft;
 
 			//Get the size of the tile texture
-			auto textureSize = tile->GetSprite().getTexture()->getSize();
+			auto textureSize = tile->GetSprite().GetSize();
 
 			//Get the world space coordinates of the tile
 			Vector2<float> tilePosition = Vector2<float>(static_cast<float>(layerPos.x * textureSize.x), static_cast<float>(layerPos.y * textureSize.y));
 
 			//Set the world space position of the tile
-			tile->GetSprite().setPosition(tilePosition);
+			tile->GetSprite().position = tilePosition;
 
 			//Add the tile to the 2D grid
 			tiles[layerPos] = tile;
@@ -200,7 +199,7 @@ void WorldMap::Flatten()
 	Rect<int> doorRoomRect = doorRoom->GetRect();
 
 	//Get the bottom left corner of the door room
-	Vector2i doorRoomBottomLeft = Vector2<int>(doorRoomRect.left, doorRoomRect.top - doorRoomRect.height);
+	Vector2i doorRoomBottomLeft = Vector2<int>(doorRoomRect.x, doorRoomRect.y + doorRoomRect.height - doorRoomRect.height);
 
 	//Get random x and y coordinates to place the door at
 	int doorX = Common::RandomNumber(1, doorRoom->GetWidth() - 2);
@@ -250,7 +249,7 @@ int WorldMap::GetHeight() const
 }
 
 //Gets the size of each tile in the map
-sf::Vector2u WorldMap::GetTileSize() const
+Vector2<unsigned int> WorldMap::GetTileSize() const
 {
 	return tileSize;
 }
@@ -262,49 +261,57 @@ Vector2<int> WorldMap::GetSpawnPoint() const
 }
 
 //Gets all the enemy spawnpoints in the map
-const std::vector<sf::Vector2f>& WorldMap::GetEnemySpawnPoints() const
+const std::vector<Vector2f>& WorldMap::GetEnemySpawnPoints() const
 {
 	return enemySpawnPoints;
 }
 
 //Gets all the enemy spawnpoints in the map
-std::vector<sf::Vector2f>& WorldMap::GetEnemySpawnPoints()
+std::vector<Vector2f>& WorldMap::GetEnemySpawnPoints()
 {
 	return enemySpawnPoints;
 }
 
 //Gets the location of the exit door
-sf::Vector2f WorldMap::GetDoorLocation() const
+Vector2f WorldMap::GetDoorLocation() const
 {
 	return doorLocation;
 }
 
 //Draws the world map to the screen
-void WorldMap::Render(RenderWindow& window)
+void WorldMap::Render(SDL_Renderer* renderer)
 {
 	//Get the currently set render view of the window
-	auto view = window.getView();
+	//auto view = window.getView();
 
 	//Get the center of the view
-	auto viewCenter = view.getCenter();
+	//auto viewCenter = view.getCenter();
 
 	//Get the size of the view
-	auto viewSize = view.getSize();
+	//auto viewSize = view.getSize();
 	
 	//Get the rect bounds that encompasses the entire viewing area
-	auto viewRect = Rect<int>(viewCenter.x - (viewSize.x / 2.0f), viewCenter.y + (viewSize.y / 2.0f), viewSize.x, viewSize.y);
+	//auto viewRect = Rect<int>(viewCenter.x - (viewSize.x / 2.0f), viewCenter.y + (viewSize.y / 2.0f), viewSize.x, viewSize.y);
 
 
 	//Get the size of the textures used in the map
-	Vector2i textureSize = static_cast<Vector2i>(Common::Textures::centerPiece1.GetTexture().getSize());
+	//Vector2i textureSize = static_cast<Vector2i>(Common::Textures::centerPiece1.GetTexture().getSize());
+	Vector2i textureSize = GetTileSize();
+
+
+	Vector2i dimensions = Common::GetWindowDimensions();
+
+	auto camPos = Common::CameraPosition;
+
+	auto viewRect = Rect<int>(camPos.x - (dimensions.x / 2.0f),camPos.y - (dimensions.y / 2.0f),dimensions.x,dimensions.y);
 
 	//Convert the viewing rect into map coordinates
-	auto mapView = Rect<int>(viewRect.left / textureSize.x, viewRect.top / textureSize.y, viewRect.width / textureSize.x, viewRect.height / textureSize.y);
+	auto mapView = Rect<int>(viewRect.x / textureSize.x, viewRect.y + viewRect.height / textureSize.y, viewRect.width / textureSize.x, viewRect.height / textureSize.y);
 
 	//Loop over the entire map viewing rect, with an offset of 3 applied to prevent artifacts from appearing on the sides of the screen
-	for (int x = mapView.left - 3; x < (mapView.left + mapView.width) + 3; x++)
+	for (int x = mapView.x - 3; x < (mapView.x + mapView.width) + 3; x++)
 	{
-		for (int y = (mapView.top - mapView.height) - 3; y < mapView.top + 3; y++)
+		for (int y = (mapView.y + mapView.height - mapView.height) - 3; y < mapView.y + mapView.height + 3; y++)
 		{
 			//If the coordinates are not within the boundaries of the map
 			if (x < 0 || x >= tiles.GetWidth() || y < 0 || y >= tiles.GetHeight())
@@ -321,7 +328,8 @@ void WorldMap::Render(RenderWindow& window)
 				if (tile != nullptr)
 				{
 					//Draw it to the screen
-					window.draw(tiles[{x, y}]->GetSprite());
+					//window.draw(tiles[{x, y}]->GetSprite());
+					tiles[{x, y}]->GetSprite().DrawSprite(renderer);
 				}
 			}
 		}
@@ -389,21 +397,21 @@ BackgroundTile* WorldMap::operator[](Vector2<int> position) const
 }
 
 //Retrieves all the tiles that are wintin the specified rectangle
-Array2D<BackgroundTile*> WorldMap::GetTilesWithinRect(sf::FloatRect rect) const
+Array2D<BackgroundTile*> WorldMap::GetTilesWithinRect(RectF rect) const
 {
 	//Convert the rect to map coordinates
-	Rect<int> area = Rect<int>(floorf(rect.left) / tileSize.x ,ceilf(rect.top) / tileSize.y,ceilf(rect.width) / tileSize.x,ceilf(rect.height) / tileSize.y );
+	Rect<int> area = Rect<int>(floorf(rect.x) / tileSize.x ,ceilf(rect.y + rect.height) / tileSize.y,ceilf(rect.width) / tileSize.x,ceilf(rect.height) / tileSize.y );
 
 	//Create the tile grid
 	Array2D<BackgroundTile*> grid{area.width,area.height,nullptr};
 
 	//Set the offset to be the bottom-left corner of the map rect
-	grid.SetOffset({area.left,(area.top - area.height)});
+	grid.SetOffset({area.x,(area.y + area.height - area.height)});
 
 	//Loop over the entire map rectangle
-	for (int x = area.left; x < area.left + area.width; x++)
+	for (int x = area.x; x < area.x + area.width; x++)
 	{
-		for (int y = area.top - area.height; y < area.top; y++)
+		for (int y = area.y + area.height - area.height; y < area.y + area.height; y++)
 		{
 			//Get the tile at the specified position and add it to the 2D grid
 			grid.Set(GetTile(x,y),x,y);
@@ -411,7 +419,7 @@ Array2D<BackgroundTile*> WorldMap::GetTilesWithinRect(sf::FloatRect rect) const
 	}
 
 	//Convert the offset to world coordinates
-	grid.SetOffset({ area.left * static_cast<int>(tileSize.x),(area.top - area.height)* static_cast<int>(tileSize.y) });
+	grid.SetOffset({ area.x * static_cast<int>(tileSize.x),(area.y + area.height - area.height)* static_cast<int>(tileSize.y) });
 
 	//Return the grid
 	return grid;

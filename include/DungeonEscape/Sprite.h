@@ -12,6 +12,7 @@ class Sprite
 	SDL_Rect texture_rect;
 
 public:
+	Sprite(const char* file_path,Rect<int> textureRect);
 	Sprite(const char* file_path);
 	Sprite();
 
@@ -22,23 +23,17 @@ public:
 
 	SDL_RendererFlip flipMode = SDL_RendererFlip::SDL_FLIP_NONE;
 
-	/*float GetXPos() const;
-	float GetYPos() const;
-
-	void SetXPos(float x);
-	void SetYPos(float y);
-
-	float GetXScale() const;
-	float GetYScale() const;
-
-	void SetXScale(float x);
-	void SetYScale(float y);*/
-
 	RectF GetTextureRect() const;
 	RectF GetLocalRect() const;
 	RectF GetGlobalRect() const;
 
+	Vector2i GetSize() const;
+
+	void SetTextureRect(RectI rect);
+	void SetTextureRect(SDL_Rect rect);
+
 	Vector2f GetOriginPosOffset() const;
 
 	void DrawSprite(SDL_Renderer* renderer) const;
+	void DrawSpriteUI(SDL_Renderer* renderer) const;
 };

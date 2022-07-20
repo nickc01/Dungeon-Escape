@@ -13,7 +13,7 @@ BackgroundTile::BackgroundTile(const Sprite& sprite, Vector2<int> position, bool
 	BackgroundTile(sprite,collidable)
 {
 	//Set the sprite's position
-	this->sprite.position = Vector2f(position.GetX(),position.GetY());
+	this->sprite.position = Vector2f(position.x,position.y);
 }
 
 //Returns whether the sprite is colidable or not

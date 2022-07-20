@@ -1,9 +1,10 @@
 #pragma once
 
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
 #include <algorithm> //Contains many commonly used algorithms such as std::sort and std::finds>
 #include <string> //Contains std::string
 #include <mutex> //Contains std::mutex and std::recursive_mutex for resource locking and to prevent data races
+#include <list>
+#include <vector>
 
 
 
@@ -97,7 +98,7 @@ public:
 	//Copy Assignment
 	ObjectManager<objectType>& operator=(const ObjectManager<objectType>& source) noexcept
 	{
-		SetActive(source.ineList);
+		SetActive(source.inList);
 		return *this;
 
 	}
@@ -126,7 +127,7 @@ public:
 };
 
 template<typename objectType,typename MutexType>
-std::vector<objectType*> ObjectManager<objectType,MutexType>::list{};  //The list of all instantiated objects
+std::vector<objectType*> ObjectManager<objectType, MutexType>::list{}; //The list of all instantiated objects
 
 template<typename objectType,typename MutexType>
 MutexType ObjectManager<objectType,MutexType>::listLock{}; //The lock for the object list

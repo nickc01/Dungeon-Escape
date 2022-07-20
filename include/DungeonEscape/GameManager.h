@@ -94,7 +94,7 @@ public:
 	bool IsComplete() const;
 
 	//The update function that is called each frame
-	virtual void Update(sf::Time dt) override;
+	virtual void Update(double dt) override;
 	//Called to end the Game Manager
 	void End();
 };

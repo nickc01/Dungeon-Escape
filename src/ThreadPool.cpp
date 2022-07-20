@@ -3,19 +3,20 @@
 #include <list> //Contains std::list for storing items in a linked list
 #include <mutex> //Contains std::mutex and std::recursive_mutex for resource locking and to prevent data races //Contains std::mutex and std::recursive_mutex for mutual exclusion of resources and prevents data races
 #include <iostream>
+#include <SDL.h>
 
 using namespace std; //Prevents me from having to type std everywhere
 
 namespace
 {
 	volatile bool running = false; //Whether the thread pool is running or not
-	thread poolThread; //The actual thread
+	SDL_Thread* poolThread; //The actual thread
 	recursive_mutex poolMutex; //The mutex to prevent data races when adding and removing from the function list
 
 	list<function<void()>> threadPoolFunctions; //The list of functions to execute
 
 	//The main thread pool loop
-	void ThreadPoolMain();
+	int ThreadPoolMain(void* data);
 }
 
 //Start the thread pool
@@ -27,7 +28,8 @@ void ThreadPool::Start()
 		//Start the thread
 		running = true;
 
-		poolThread = thread(ThreadPoolMain);
+		//poolThread = SDL_CreateThread(ThreadPoolMain);
+		poolThread = SDL_CreateThread(ThreadPoolMain, "ThreadPoolThread", (void*)nullptr);
 	}
 }
 
@@ -49,7 +51,7 @@ void ThreadPool::Stop()
 	{
 		//Stop the thread and join with it
 		running = false;
-		poolThread.join();
+		SDL_WaitThread(poolThread, nullptr);
 	}
 }
 
@@ -58,7 +60,7 @@ void ThreadPool::Stop()
 namespace
 {
 	//The main thread pool loop
-	void ThreadPoolMain()
+	int ThreadPoolMain(void* data)
 	{
 		//Repeat untill the thread should stop running
 		while (true)
@@ -93,5 +95,7 @@ namespace
 			//Execute the function
 			currentFunction();
 		}
+
+		return 0;
 	}
 }
