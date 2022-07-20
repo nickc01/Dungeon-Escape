@@ -1,17 +1,22 @@
 #pragma once
 
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+//#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
 
 #include <string> //Contains std::string
-#include <SFML/System.hpp>
+//#include <SFML/System.hpp>
+#include <SDL.h>
 
 //Loads a SFML Texture from a resource
 class ResourceTexture
 {
-	//The resource to load
-	sf::FileInputStream texture_file;
+	SDL_Surface* texture = nullptr;
 
-	sf::Texture texture; //The loaded Texture
+	const char* file_path = nullptr;
+
+	//The resource to load
+	//sf::FileInputStream texture_file;
+
+	//sf::Texture texture; //The loaded Texture
 
 public:
 
@@ -24,9 +29,9 @@ public:
 	ResourceTexture();
 
 	//Gets the texture that was loaded
-	const sf::Texture& GetTexture() const;
+	const SDL_Surface* GetTexture() const;
 
 	//Gets the texture that was loaded
-	sf::Texture& GetTexture();
+	SDL_Surface* GetTexture();
 };
 

@@ -1,7 +1,5 @@
 #include <DungeonEscape/BackgroundTile.h> //Contains the BackgroundTile class
 
-using namespace sf; //Prevents me from having to type sf everywhere
-
 //Constructs a new background tile with the specified sprite
 BackgroundTile::BackgroundTile(const Sprite& sprite, bool collidable) :
 	sprite(sprite),
@@ -15,7 +13,7 @@ BackgroundTile::BackgroundTile(const Sprite& sprite, Vector2<int> position, bool
 	BackgroundTile(sprite,collidable)
 {
 	//Set the sprite's position
-	this->sprite.setPosition(static_cast<Vector2<float>>(position));
+	this->sprite.position = Vector2f(position.GetX(),position.GetY());
 }
 
 //Returns whether the sprite is colidable or not

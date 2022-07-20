@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/bin/${CMAKE_BUILD_TYPE}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/bin/${CMAKE_BUILD_TYPE}")
 
-add_subdirectory(lib/SFML)
+# add_subdirectory(lib/SFML)
 
 add_executable(${PROJECT_NAME}	"src/main.cpp"
 								"src/AnimatedEntity.cpp"
@@ -61,8 +61,14 @@ add_executable(${PROJECT_NAME}	"src/main.cpp"
 								"include/DungeonEscape/SkeletonEnemy.h"
 								"include/DungeonEscape/ThreadPool.h"
 								"include/DungeonEscape/UpdateReceiver.h"
-								"include/DungeonEscape/WorldMap.h")
+								"include/DungeonEscape/WorldMap.h" "include/DungeonEscape/Sprite.h" "src/Sprite.cpp"  "include/DungeonEscape/Vector2.h" "include/DungeonEscape/Rect.h")
 
+add_subdirectory(lib/SDL2)
+add_subdirectory(lib/SDL2_image)
+
+IF(UNIX)
+    add_definitions("-fPIC")
+ENDIF()
 
 file(GLOB_RECURSE RESOURCE_FILES
      "resources/*.*"
@@ -77,11 +83,11 @@ foreach(file ${RESOURCE_FILES})
 endforeach()
 
 
-target_link_libraries(${PROJECT_NAME} PUBLIC sfml-audio sfml-graphics sfml-network sfml-system sfml-window)
+target_link_libraries(${PROJECT_NAME} PUBLIC SDL2 SDL2main SDL2_image)
 
-IF (WIN32)
-	target_link_libraries(${PROJECT_NAME} PUBLIC sfml-main)
-ENDIF()
+#IF (WIN32)
+#	target_link_libraries(${PROJECT_NAME} PUBLIC sfml-main)
+#ENDIF()
 
 find_package(Threads REQUIRED)
 if(THREADS_HAVE_PTHREAD_ARG)
@@ -93,7 +99,7 @@ endif()
 
 
 
-target_include_directories(${PROJECT_NAME} PUBLIC "include")
+target_include_directories(${PROJECT_NAME} PUBLIC "include" "lib/SDL2/include")
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory

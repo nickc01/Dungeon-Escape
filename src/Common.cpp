@@ -6,12 +6,16 @@
 #include <DungeonEscape/Direction.h> //Contains the Direction Enum for specifying the direction
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
 
 namespace
 {
+
+    Sprite CreateSprite(const char* file_path)
+    {
+        return Sprite(file_path);
+    }
     //Create a sprite with the specified texture and origin point
-    Sprite CreateSprite(const Texture& texture, Vector2f origin)
+    /*Sprite CreateSprite(const Texture& texture, Vector2f origin)
     {
         //Create the sprite with the set texture
         auto sprite = Sprite(texture);
@@ -38,7 +42,7 @@ namespace
     Sprite CreateSprite(const ResourceTexture& texture)
     {
         return CreateSprite(texture.GetTexture());
-    }
+    }*/
 }
 
 namespace Common
@@ -70,26 +74,27 @@ namespace Common
         //A list of all common textures used for both the rooms and the branches
         //These are then used by the Common Sprites
 
-        ResourceTexture centerPiece1{RES_CENTERPIECE1};
-        ResourceTexture centerPiece2{RES_CENTERPIECE2};
+        const char* centerPiece1{RES_CENTERPIECE1};
+        const char* centerPiece2{RES_CENTERPIECE2};
 
-        ResourceTexture topJointPiece{RES_TOPJOINT};
-        ResourceTexture bottomJointPiece{RES_BOTTOMJOINT};
-        ResourceTexture leftJointPiece{RES_LEFTJOINT};
-        ResourceTexture rightJointPiece{RES_RIGHTJOINT};
+        const char* topJointPiece{RES_TOPJOINT};
+        const char* bottomJointPiece{RES_BOTTOMJOINT};
+        const char* leftJointPiece{RES_LEFTJOINT};
+        const char* rightJointPiece{RES_RIGHTJOINT};
 
-        ResourceTexture topLeftPiece{RES_TOPLEFTPIECE};
-        ResourceTexture topRightPiece{RES_TOPRIGHTPIECE};
-        ResourceTexture bottomLeftPiece{RES_BOTTOMLEFTPIECE};
-        ResourceTexture bottomRightPiece{RES_BOTTOMRIGHTPIECE};
-        ResourceTexture topPiece{RES_TOPPIECE};
-        ResourceTexture bottomPiece{RES_BOTTOMPIECE};
-        ResourceTexture rightPiece{RES_RIGHTPIECE};
-        ResourceTexture leftPiece{RES_LEFTPIECE};
+        const char* topLeftPiece{RES_TOPLEFTPIECE};
+        const char* topRightPiece{RES_TOPRIGHTPIECE};
+        const char* bottomLeftPiece{RES_BOTTOMLEFTPIECE};
+        const char* bottomRightPiece{RES_BOTTOMRIGHTPIECE};
+        const char* topPiece{RES_TOPPIECE};
+        const char* bottomPiece{RES_BOTTOMPIECE};
+        const char* rightPiece{RES_RIGHTPIECE};
+        const char* leftPiece{RES_LEFTPIECE};
     }
 
     //The main render window the game will take place in
-    RenderWindow MainWindow(VideoMode(800, 600), "Dungeon Escape");
+    SDL_Window* MainWindow;
+    SDL_Surface* MainWindowSurface;
 }
 
 
@@ -118,7 +123,7 @@ void Common::CreateSprites()
 }
 
 //Gets a random sprite that can be used as a center tile
-sf::Sprite Common::GetCenterSprite()
+Sprite Common::GetCenterSprite()
 {
     //Pick a random number between 0 and 1
     int random = RandomNumber(0, 2);
@@ -140,7 +145,7 @@ sf::Sprite Common::GetCenterSprite()
     }
 
     //Apply a random rotation to the sprite to vary it even more
-    selectedSprite.setRotation(DirectionToDegrees(RandomDirection()));
+    //selectedSprite.setRotation(DirectionToDegrees(RandomDirection()));
 
     //Return the selected sprite
     return selectedSprite;
@@ -152,10 +157,10 @@ sf::Sprite Common::GetCenterSprite()
 
 //IMPORTANT NOTE : In SFML, The negative y-axis points upwards, not downwards, because the y-axis starts at the top of the screen.
 //                 This means that down points up, and up points down, so this will affect which sprite we choose
-sf::Sprite Common::GetJointPiece(Direction sourceDirection, Direction to)
+Sprite Common::GetJointPiece(Direction sourceDirection, Direction to)
 {
     //The selected joint sprite
-    sf::Sprite joint = Common::Sprites::topJointPiece;
+    Sprite joint = Common::Sprites::topJointPiece;
 
     switch (sourceDirection)
     {
@@ -189,7 +194,8 @@ sf::Sprite Common::GetJointPiece(Direction sourceDirection, Direction to)
             joint = Common::Sprites::topJointPiece;
 
             //Flip the sprite horizontally so it's the top-left piece
-            joint.scale({ -1.0f,1.0f });
+            //joint.scale({ -1.0f,1.0f });
+            joint.scale = {-1.0f,1.0f};
 
             //Return the joint piece
             return joint;
@@ -200,7 +206,7 @@ sf::Sprite Common::GetJointPiece(Direction sourceDirection, Direction to)
             //Set the sprite to the bottom right joint piece
             joint = Common::Sprites::bottomJointPiece;
             //Flip the sprite horizontally so it's the bottom-left piece
-            joint.scale({ -1.0f,1.0f });
+            joint.scale = { -1.0f,1.0f };
 
             //Return the joint piece
             return joint;
@@ -214,7 +220,7 @@ sf::Sprite Common::GetJointPiece(Direction sourceDirection, Direction to)
             //Set the sprite to the bottom right joint piece
             joint = Common::Sprites::bottomJointPiece;
             //Flip the sprite horizontally so it's the bottom-left piece
-            joint.scale({-1.0f,1.0f});
+            joint.scale = { -1.0f,1.0f };
 
             //Return the joint piece
             return joint;
@@ -257,7 +263,7 @@ sf::Sprite Common::GetJointPiece(Direction sourceDirection, Direction to)
 //Gets a sprite that represents a side wall
 //IMPORTANT NOTE : In SFML, The negative y-axis points upwards, not downwards, because the y-axis starts at the top of the screen.
 //                 This means that down points up, and up points down, so this will affect which sprite we choose
-sf::Sprite Common::GetSideSprite(Direction side)
+Sprite Common::GetSideSprite(Direction side)
 {
     switch (side)
     {
@@ -283,7 +289,7 @@ sf::Sprite Common::GetSideSprite(Direction side)
 //Gets a sprite that represents a corner
 //IMPORTANT NOTE : In SFML, The negative y-axis points upwards, not downwards, because the y-axis starts at the top of the screen.
 //                 This means that down points up, and up points down, so this will affect which sprite we choose
-sf::Sprite Common::GetCornerSprite(Direction A, Direction B)
+Sprite Common::GetCornerSprite(Direction A, Direction B)
 {
     switch (A)
     {
@@ -353,31 +359,25 @@ sf::Sprite Common::GetCornerSprite(Direction A, Direction B)
 }
 
 //Checks whether two sprites intersect. Optionally scaling their hitboxes by a scale factor
-bool Common::SpritesIntersect(const sf::Sprite& A, const sf::Sprite& B, Vector2f scaleFactor)
+bool Common::SpritesIntersect(const Sprite& A, const Sprite& B)
 {
     //Get the global bounds of sprite A
-    auto rectA = A.getGlobalBounds();
+    auto rectA = A.GetGlobalRect();
     //Get the global bounds of sprite B
-    auto rectB = B.getGlobalBounds();
-
-    //Scale their bounds by the specified scale factor
-    rectA.left *= scaleFactor.x;
-    rectA.top *= scaleFactor.y;
-    rectB.top *= scaleFactor.y;
-    rectB.left *= scaleFactor.x;
+    auto rectB = B.GetGlobalRect();
 
     //Check if they intersect
     return Math::RectsIntersect(rectA, rectB);
 }
 
 //Checks whether two sprites intersect
-bool Common::SpritesIntersect(const sf::Sprite& A, const sf::Sprite& B)
+/*bool Common::SpritesIntersect(const Sprite& A, const Sprite& B)
 {
     return Common::SpritesIntersect(A, B, { 1.0f,1.0f });
 }
 
 //Checks whether two sprites intersect. Optionally scaling their hitboxes by their texture sizes if set to true
-bool Common::SpritesIntersect(const sf::Sprite& A, const sf::Sprite& B, bool scaleByTextureSize)
+bool Common::SpritesIntersect(const Sprite& A, const Sprite& B, bool scaleByTextureSize)
 {
     sf::Vector2f scaleFactor(1.0f, 1.0f);
     //If they are to be scaled based on their texture size
@@ -391,34 +391,39 @@ bool Common::SpritesIntersect(const sf::Sprite& A, const sf::Sprite& B, bool sca
     }
 
     return Common::SpritesIntersect(A, B, scaleFactor);
-}
+}*/
 
 //Refreshes the size of the window. This is normally used when the window gets resized
-void Common::RefreshWindow(sf::RenderWindow& window)
+void Common::RefreshWindow(SDL_Window* window)
 {
-    //Get the current window view
+    /*//Get the current window view
     auto view = window.getView();
     //Reset the view's size
     view.setSize(static_cast<sf::Vector2f>(window.getSize() / 3u));
     //Set the window's view to the new one
-    window.setView(view);
+    window.setView(view);*/
 }
 
 //Gets the mouse position in world coordinates
-sf::Vector2f Common::GetMouseWorldCoordinates(sf::RenderWindow& window)
+Vector2f Common::GetMouseWorldCoordinates(SDL_Window* window)
 {
+    int x, y;
+
+    SDL_GetMouseState(&x, &y);
+
     //Gets the mouse's desktop position, subtracts the window position to get the window position of the mouse, and then maps that position to world coordinates
-    return window.mapPixelToCoords(Mouse::getPosition() - window.getPosition());
+   // return window.mapPixelToCoords(Mouse::getPosition() - window.getPosition());
+    return Vector2f(x, y);
 }
 
 //Centers the camera over a specified point
-void Common::CenterCamera(Vector2f center, sf::RenderWindow& window)
+void Common::CenterCamera(Vector2f center, SDL_Window* window)
 {
-    //Get the currently set view
+    /*//Get the currently set view
     auto view = window.getView();
 
     //Update the window's view with the new view
-    window.setView(View(center,view.getSize()));
+    window.setView(View(center,view.getSize()));*/
 }
 
 
@@ -438,4 +443,13 @@ int Common::RandomNumber(int minRange, int maxRange)
 
     //Return a random number between the two ranges
     return (rand() % (maxRange - minRange)) + minRange;
+}
+
+Vector2f Common::GetWindowDimensions()
+{
+    int w, h;
+
+    SDL_GetWindowSize(Common::MainWindow, &w, &h);
+
+    return Vector2f(w, h);
 }

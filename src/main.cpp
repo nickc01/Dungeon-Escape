@@ -4,8 +4,8 @@
 	Dungeon Escape : A small GUI C++ game where you attempt to escape a dungeon full of skeletons
 */
 
-#include <SFML/Window.hpp>
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+//#include <SFML/Window.hpp>
+//#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
 #include <string> //Contains std::string
 #include <DungeonEscape/ResourceTexture.h> //Contains the ResourceTexture class for loading in texture resources
 #include <DungeonEscape/Common.h> //Contains many common game functions and variables
@@ -13,9 +13,10 @@
 #include <DungeonEscape/UpdateReceiver.h> //Contains the UpdateReceiver class for receiving update events
 #include <mutex> //Contains std::mutex and std::recursive_mutex for resource locking and to prevent data races //Contains std::mutex and std::recursive_mutex for mutual exclusion of resources and prevents data races
 #include <DungeonEscape/GameManager.h> //Contains the GameManager class, which contains the main logic of the game
+#include <SDL.h>
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
+//using namespace sf; //Prevents me from having to type sf everywhere
 
 
 //The start of the program
