@@ -73,7 +73,15 @@ set(sdl2main_LIBRARY SDL2main)
 set(sdl2_ttf_INCLUDE_DIR "lib/SDL_ttf")
 set(sdl2_ttf_LIBRARY SDL2_ttf)
 
+if (MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
 add_subdirectory(lib/SDL_FontCache)
+
+if (MSVC)
+    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS OFF)
+endif()
 
 IF(UNIX)
     add_definitions("-fPIC")
