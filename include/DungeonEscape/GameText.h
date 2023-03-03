@@ -12,13 +12,20 @@ class GameText : public Renderable
 
 	FC_Font* mainGameFont = nullptr;
 
-	//Text text; //The text object
+	unsigned int characterSize;
+
+	SDL_Renderer* renderer;
+
+	TTF_Font* font;
 
 public:
 
 	std::string text;
 
 	Vector2f position;
+
+	void SetCharacterSize(unsigned int size);
+	unsigned int GetCharacterSize() const;
 
 	//Constructs a new GameText object
 	GameText(const std::string text, Vector2f position, unsigned int characterSize = 300u, Vector2f scale = Vector2f(0.1f,0.1f), SDL_Renderer* renderer = Common::MainWindowRenderer);
@@ -31,6 +38,9 @@ public:
 
 	//Renders the GameText object
 	virtual void Render(SDL_Renderer* renderer) override;
+
+	//Called whenever the SDL_Renderer gets rebuilt
+	virtual void OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer) override;
 
 };
 

@@ -19,6 +19,9 @@ class Entity : public Renderable, public UpdateReceiver
 	//Called when the dialog box is to be rendered
 	virtual void Render(SDL_Renderer* renderer) override;
 
+	//Called whenever the SDL_Renderer gets rebuilt
+	virtual void OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer) override;
+
 protected:
 	//Gets all the world tiles that are nearby the entity
 	Array2D<BackgroundTile*> GetTilesAroundEntity() const;

@@ -48,3 +48,9 @@ void Door::Render(SDL_Renderer* renderer)
 	//window.draw(doorSprite);
 	doorSprite.DrawSprite(renderer);
 }
+
+//Called whenever the SDL_Renderer gets rebuilt
+void Door::OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer)
+{
+	doorSprite.Rebuild(renderer);
+}

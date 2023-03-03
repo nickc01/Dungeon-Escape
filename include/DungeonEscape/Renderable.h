@@ -32,6 +32,9 @@ public:
 	//Used to render the object to the scene
 	virtual void Render(SDL_Renderer* renderer) = 0;
 
+	//Called whenever the SDL_Renderer gets rebuilt
+	virtual void OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer) = 0;  
+
 	//The destructor
 	virtual ~Renderable();
 };

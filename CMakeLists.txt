@@ -67,15 +67,26 @@ add_subdirectory(lib/SDL2)
 add_subdirectory(lib/SDL2_image)
 add_subdirectory(lib/SDL_ttf)
 
+
 set(sdl2_INCLUDE_DIR "lib/SDL2/include")
 set(sdl2_LIBRARY SDL2)
 set(sdl2main_LIBRARY SDL2main)
 set(sdl2_ttf_INCLUDE_DIR "lib/SDL_ttf")
 set(sdl2_ttf_LIBRARY SDL2_ttf)
 
+set(SDL2_INCLUDE_DIR "lib/SDL2/include")
+set(SDL2_LIBRARY SDL2)
+set(SDL2MAIN_LIBRARY SDL2main)
+set(SDL2_TTF_INCLUDE_DIR "lib/SDL_ttf")
+set(SDL2_TTF_LIBRARY SDL2_ttf)
+
 if (MSVC)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
+
+add_subdirectory(lib/sdl-gpu)
+
+#target_compile_definitions(${PROJECT_NAME} PRIVATE FC_USE_SDL_GPU=1)
 
 add_subdirectory(lib/SDL_FontCache)
 
@@ -100,7 +111,7 @@ foreach(file ${RESOURCE_FILES})
 endforeach()
 
 
-target_link_libraries(${PROJECT_NAME} PUBLIC SDL2 SDL2main SDL2_image SDL2_ttf FontCache)
+target_link_libraries(${PROJECT_NAME} PUBLIC SDL2 SDL2main SDL2_image SDL2_ttf FontCache SDL_gpu)
 
 #IF (WIN32)
 #	target_link_libraries(${PROJECT_NAME} PUBLIC sfml-main)
@@ -116,7 +127,7 @@ endif()
 
 
 
-target_include_directories(${PROJECT_NAME} PUBLIC "include" "lib/SDL2/include")
+target_include_directories(${PROJECT_NAME} PUBLIC "include" "lib/SDL2/include" "lib/sdl-gpu/include")
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory

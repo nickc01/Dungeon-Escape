@@ -73,7 +73,6 @@ namespace Common
     {
         //A list of all common textures used for both the rooms and the branches
         //These are then used by the Common Sprites
-
         const char* centerPiece1{RES_CENTERPIECE1};
         const char* centerPiece2{RES_CENTERPIECE2};
 

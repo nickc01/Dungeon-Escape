@@ -72,6 +72,9 @@ public:
 	//Draws the world map to the screen
 	virtual void Render(SDL_Renderer* renderer) override;
 
+	//Called whenever the SDL_Renderer gets rebuilt
+	virtual void OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer) override;
+
 	//Tests to see if a tile exists at the specified location. If true, then the output reference will be modified
 	bool HasTile(int x, int y, BackgroundTile& output) const;
 	//Tests to see if a tile exists at the specified location.

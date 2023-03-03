@@ -336,6 +336,18 @@ void WorldMap::Render(SDL_Renderer* renderer)
 	}
 }
 
+//Called whenever the SDL_Renderer gets rebuilt
+void WorldMap::OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer)
+{
+	for (int x = 0; x < tiles.GetWidth(); x++)
+	{
+		for (int y = 0; y < tiles.GetHeight(); y++)
+		{
+			tiles[{x, y}]->GetSprite().Rebuild(renderer);
+		}
+	}
+}
+
 //Tests to see if a tile exists at the specified location. If true, then the output reference will be modified
 bool WorldMap::HasTile(int x, int y, BackgroundTile& output) const
 {

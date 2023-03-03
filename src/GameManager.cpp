@@ -11,6 +11,7 @@ void GameManager::MenuUpdate()
 	//If the enter key has been pressed
 	if (Common::WindowInFocus() && Input::enter)
 	{
+
 		//Destroy the title text
 		TitleText = nullptr;
 

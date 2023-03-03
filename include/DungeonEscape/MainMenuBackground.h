@@ -16,6 +16,9 @@ public:
 	//Renders the menu background to the screen
 	virtual void Render(SDL_Renderer* renderer) override;
 
+	//Called whenever the SDL_Renderer gets rebuilt
+	virtual void OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer) override;
+
 	//Constructs a new MainMenuBackground
 	MainMenuBackground();
 

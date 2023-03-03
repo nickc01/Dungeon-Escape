@@ -13,6 +13,14 @@ namespace
             SDL_DestroyTexture(p);
         }
     };
+
+    struct surface_deleter
+    {
+        void operator ()(SDL_Surface* p)
+        {
+            SDL_FreeSurface(p);
+        }
+    };
 }
 
 Sprite::Sprite(const char* file_path) : Sprite(file_path, RectI(0,0,0,0))
@@ -25,7 +33,9 @@ Sprite::Sprite(const char* file_path, Rect<int> textureRect)
 	auto loaded_surface = IMG_Load(file_path);
 
     //Convert surface to screen format
-    SDL_Surface* surface = SDL_ConvertSurface(loaded_surface, Common::MainWindowSurface->format, 0);
+    //SDL_Surface* surface = SDL_ConvertSurface(loaded_surface, Common::MainWindowSurface->format, 0);
+
+    surface = std::shared_ptr<SDL_Surface>(SDL_ConvertSurface(loaded_surface, Common::MainWindowSurface->format, 0), surface_deleter());
 
     if (textureRect != RectI(0,0,0,0))
     {
@@ -42,18 +52,26 @@ Sprite::Sprite(const char* file_path, Rect<int> textureRect)
         texture_rect.h = surface->h;
     }
 
-    if (surface == NULL)
+    if (surface == nullptr)
     {
         printf("Unable to optimize image %s! SDL Error: %s\n", file_path, SDL_GetError());
     }
 
-    texture = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(Common::MainWindowRenderer, surface), texture_deleter());
+    texture = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(Common::MainWindowRenderer, surface.get()), texture_deleter());
 
     //texture_rect = loaded_surface->clip_rect;
 
     //Get rid of old loaded surface
     SDL_FreeSurface(loaded_surface);
-    SDL_FreeSurface(surface);
+    //SDL_FreeSurface(surface);
+}
+
+void Sprite::Rebuild(SDL_Renderer* renderer)
+{
+    //auto loaded_surface = IMG_Load(file_path);
+    //SDL_Surface* surface = SDL_ConvertSurface(loaded_surface, Common::MainWindowSurface->format, 0);
+
+    texture = std::shared_ptr<SDL_Texture>(SDL_CreateTextureFromSurface(renderer, surface.get()), texture_deleter());
 }
 
 Sprite::Sprite() {}

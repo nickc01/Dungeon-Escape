@@ -15,6 +15,12 @@ void Entity::Render(SDL_Renderer* renderer)
 	}
 }
 
+//Called whenever the SDL_Renderer gets rebuilt
+void Entity::OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer)
+{
+	sprite->Rebuild(renderer);
+}
+
 //Gets all the world tiles that are nearby the entity
 Array2D<BackgroundTile*> Entity::GetTilesAroundEntity() const
 {

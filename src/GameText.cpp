@@ -6,14 +6,26 @@ const char* GameText::mainGameFontPath{ RES_SQUARES_BOLD }; //The main game font
 GameText::GameText(const std::string message, Vector2f position, unsigned int characterSize, Vector2f scale, SDL_Renderer* renderer) :
 	text(message)
 {
-	if (mainGameFont == nullptr)
+	font = TTF_OpenFont(mainGameFontPath, characterSize);
+
+	//mainGameFont = FC_CreateFont();
+
+	//FC_LoadFontFromTTF(mainGameFont, font, FC_MakeColor(255, 255, 255, 255));
+
+	/*if (mainGameFont == nullptr)
 	{
-		FC_Font* mainGameFont = FC_CreateFont();
+		mainGameFont = FC_CreateFont();
 		FC_LoadFont(mainGameFont, renderer, mainGameFontPath, characterSize, FC_MakeColor(255, 255, 255, 255), TTF_STYLE_NORMAL);
-	}
+	}*/
+
+	
 
 	//Set the text's position
-	position = position;
+	this->position = position;
+
+	this->characterSize = characterSize;
+
+	OnRebuild(renderer, renderer);
 
 	//Enable rendering
 	EnableRendering();
@@ -22,6 +34,42 @@ GameText::GameText(const std::string message, Vector2f position, unsigned int ch
 	SetRenderLayer(100);
 
 	//Set the text's scale
+}
+
+unsigned int GameText::GetCharacterSize() const
+{
+	return characterSize;
+}
+
+void GameText::SetCharacterSize(const unsigned int size)
+{
+	if (characterSize != size)
+	{
+		characterSize = size;
+		OnRebuild(renderer, renderer);
+	}
+}
+
+//Called whenever the SDL_Renderer gets rebuilt
+void GameText::OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer)
+{
+
+	if (mainGameFont == nullptr)
+	{
+		FC_ClearFont(mainGameFont);
+		mainGameFont = nullptr;
+	}
+
+	this->renderer = renderer;
+
+	if (renderer != nullptr)
+	{
+
+		mainGameFont = FC_CreateFont();
+		//FC_LoadFont(mainGameFont, renderer, mainGameFontPath, characterSize, FC_MakeColor(255, 255, 255, 255), TTF_STYLE_NORMAL);
+		FC_LoadFontFromTTF(mainGameFont, renderer, font, FC_MakeColor(255, 255, 255, 255));
+
+	}
 }
 
 //Get the text object stored in the GameText object
@@ -66,6 +114,8 @@ void GameText::Render(SDL_Renderer* renderer)
 	//Set the text's old position
 	text.setPosition(oldPosition);*/
 
+
+
 	auto render_pos = position;
 
 	render_pos.x -= Common::CameraPosition.x;
@@ -76,5 +126,7 @@ void GameText::Render(SDL_Renderer* renderer)
 	render_pos.x += windowSize.x / 2;
 	render_pos.y += windowSize.y / 2;
 
-	FC_Draw(mainGameFont, renderer, position.x, position.y, text.c_str());
+	//FC_Draw()
+
+	FC_Draw(mainGameFont, renderer, render_pos.x, render_pos.y, text.c_str());
 }

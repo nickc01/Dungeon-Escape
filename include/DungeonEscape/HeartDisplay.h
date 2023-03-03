@@ -21,4 +21,7 @@ public:
 
 	//Renders the heart display to the screen
 	virtual void Render(SDL_Renderer* renderer) override;
+
+	//Called whenever the SDL_Renderer gets rebuilt
+	virtual void OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer) override;
 };

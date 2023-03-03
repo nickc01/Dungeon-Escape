@@ -52,3 +52,9 @@ void DialogBoxSprite::Render(SDL_Renderer* renderer)
 
 	Common::CameraPosition = oldCameraPos;
 }
+
+//Called whenever the SDL_Renderer gets rebuilt
+void DialogBoxSprite::OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer)
+{
+	dialogBoxSprite.Rebuild(renderer);
+}

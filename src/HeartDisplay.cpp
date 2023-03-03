@@ -77,3 +77,9 @@ void HeartDisplay::Render(SDL_Renderer* renderer)
 	//Set the old view
 	window.setView(oldView);*/
 }
+
+//Called whenever the SDL_Renderer gets rebuilt
+void HeartDisplay::OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer)
+{
+	heartSprite.Rebuild(renderer);
+}

@@ -18,6 +18,7 @@
 #include <SDL_ttf.h>
 #include <DungeonEscape/Input.h>
 #include <iostream>
+#include <SDL_gpu.h>
 
 using namespace std; //Prevents me from having to type std everywhere
 //using namespace sf; //Prevents me from having to type sf everywhere
@@ -52,7 +53,7 @@ int main(int argc, char* argv[])
 
 	Common::MainWindowSurface = SDL_GetWindowSurface(Common::MainWindow);
 
-	Common::MainWindowRenderer = SDL_CreateRenderer(Common::MainWindow, -1, SDL_RENDERER_ACCELERATED);
+	Common::MainWindowRenderer = SDL_CreateRenderer(Common::MainWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	if (Common::MainWindowRenderer == nullptr)
 	{
@@ -83,12 +84,18 @@ int main(int argc, char* argv[])
 
 	int counter = 0;
 
+	//double averageFPS = 0;
+
 	//Repeat until the game manager is complete
 	while (!manager.IsComplete())
 	{
 		prev = now;
 		now = SDL_GetPerformanceCounter();
 		dt = (double)((now - prev) / (double)SDL_GetPerformanceFrequency());
+		auto fps = 1.0 / dt;
+
+		//averageFPS = (averageFPS + fps) / 2.0;
+
 
 		//std::cout << "FPS = " << (1.0 / dt) << "\n";
 		//std::cout << counter << "\n";
@@ -129,6 +136,38 @@ int main(int argc, char* argv[])
 				{
 				case SDL_WINDOWEVENT_CLOSE:
 					manager.EndTheGame();
+					break;
+				case SDL_WINDOWEVENT_RESIZED:
+
+					Common::MainWindowSurface = SDL_GetWindowSurface(Common::MainWindow);
+
+					auto oldRenderer = Common::MainWindowRenderer;
+
+					SDL_DestroyRenderer(oldRenderer);
+
+					Common::MainWindowRenderer = SDL_CreateRenderer(Common::MainWindow, -1, SDL_RENDERER_ACCELERATED);
+
+					if (Common::MainWindowRenderer == nullptr)
+					{
+						printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+					}
+
+					{
+						//Lock the renderable object list
+						auto lockObject = unique_lock<recursive_mutex>(Renderable::GetMutex());
+
+						//Get the list of renderable objects
+						auto& renderables = Renderable::GetRenderables();
+
+						//Loop over all the renderable objects
+						for (auto i = rbegin(renderables); i != rend(renderables); i++)
+						{
+							//Render each of the objects to the main window
+							(**i).OnRebuild(Common::MainWindowRenderer,oldRenderer);
+						}
+					}
+
+
 					break;
 				}
 				break;
@@ -257,12 +296,15 @@ int main(int argc, char* argv[])
 			//Get the list of renderable objects
 			auto& renderables = Renderable::GetRenderables();
 
+			int count = 0;
 			//Loop over all the renderable objects
 			for (auto i = rbegin(renderables); i != rend(renderables); i++)
 			{
 				//Render each of the objects to the main window
 				(**i).Render(Common::MainWindowRenderer);
+				count += 1;
 			}
+
 		}
 
 		//Display the window's contents to the screen

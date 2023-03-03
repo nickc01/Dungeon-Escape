@@ -11,6 +11,8 @@ class Sprite
 
 	SDL_Rect texture_rect;
 
+	std::shared_ptr<SDL_Surface> surface;
+
 public:
 	Sprite(const char* file_path,Rect<int> textureRect);
 	Sprite(const char* file_path);
@@ -36,4 +38,6 @@ public:
 
 	void DrawSprite(SDL_Renderer* renderer) const;
 	void DrawSpriteUI(SDL_Renderer* renderer) const;
+
+	void Rebuild(SDL_Renderer* renderer);
 };

@@ -28,6 +28,12 @@ void MainMenuBackground::Render(SDL_Renderer* renderer)
 	menuBackgroundSprite.position = oldPos;
 }
 
+//Called whenever the SDL_Renderer gets rebuilt
+void MainMenuBackground::OnRebuild(SDL_Renderer* renderer, SDL_Renderer* old_renderer)
+{
+	menuBackgroundSprite.Rebuild(renderer);
+}
+
 //Constructs a new MainMenuBackground
 MainMenuBackground::MainMenuBackground()
 {
