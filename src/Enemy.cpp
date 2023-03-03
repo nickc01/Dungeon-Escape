@@ -5,9 +5,10 @@
 #include <list> //Contains std::list for storing items in a linked list
 #include <DungeonEscape/ThreadPool.h> //Contains the thread pool for running code asynchronously
 #include <iostream>
+#include <smk/Sprite.hpp>
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type sf everywhere
 
 namespace
 {
@@ -43,17 +44,17 @@ namespace
 		std::array<std::tuple<BackgroundTile*,Vector2i>, 4> Tiles; //Stores the four neighboring tiles and their positions
 
 		//Setup the neighboring positions
-		positions[0] = Vector2i(position.x + 1, position.y);
-		positions[1] = Vector2i(position.x - 1, position.y);
-		positions[2] = Vector2i(position.x, position.y + 1);
-		positions[3] = Vector2i(position.x, position.y - 1);
+		positions[0] = Vector2i(getX(position) + 1, getY(position));
+		positions[1] = Vector2i(getX(position) - 1, getY(position));
+		positions[2] = Vector2i(getX(position), getY(position) + 1);
+		positions[3] = Vector2i(getX(position), getY(position) - 1);
 
 		//Loop over all the positions
 		for (int i = 0; i < positions.size(); i++)
 		{
 			//Get the tiles at the corresponding positions
 			auto& pos = positions[i];
-			Tiles[i] = {map.GetTile(pos.x,pos.y),pos};
+			Tiles[i] = {map.GetTile(getX(pos),getY(pos)),pos};
 		}
 		//Return the tiles and their positions
 		return Tiles;
@@ -198,7 +199,7 @@ PathResult Enemy::GeneratePathToPlayer()
 	shared_ptr<Node> nodePath = targetNode;
 
 	//Stores the final path the enemy will take to get to the player
-	std::list<sf::Vector2f> Path;
+	std::list<Vector2f> Path;
 
 	//Repeat untill there are no more nodes left to iterate
 	while (nodePath != nullptr)
@@ -264,7 +265,7 @@ PathResult::PathResult()
 }
 
 //Constructs a new results object with the specified parameters
-PathResult::PathResult(const std::list<sf::Vector2f>& path, bool success) :
+PathResult::PathResult(const std::list<Vector2f>& path, bool success) :
 	Path(path),
 	Success(success)
 {
@@ -272,7 +273,7 @@ PathResult::PathResult(const std::list<sf::Vector2f>& path, bool success) :
 }
 
 //Constructs a new results object with the specified parameters
-PathResult::PathResult(std::list<sf::Vector2f>&& path, bool success) :
+PathResult::PathResult(std::list<Vector2f>&& path, bool success) :
 	Path(std::move(path)),
 	Success(success)
 {

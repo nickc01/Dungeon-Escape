@@ -1,6 +1,7 @@
 #pragma once
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+//#include <smk/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
 #include <vector> //Contains std::vector for storing objects in an array
+#include <DungeonEscape/Vector.h>
 
 
 //Represents a two dimensional array of objects
@@ -35,7 +36,7 @@ public:
 
 	//Constructs a new 2D array. This will also construct any new objects that will be in the array
 	template<typename... ConstructorParams>
-	Array2D(sf::Vector2<int> Dimensions, ConstructorParams&&... params) : Array2D(Dimensions.x,Dimensions.y,params...)
+	Array2D(Vector2<int> Dimensions, ConstructorParams&&... params) : Array2D(Dimensions.x,Dimensions.y,params...)
 	{
 
 	}
@@ -59,16 +60,16 @@ public:
 	}
 
 	//Gets the positional offset of the 2D array
-	sf::Vector2<int> GetOffset() const
+	Vector2<int> GetOffset() const
 	{
-		return sf::Vector2<int>(offsetX,offsetY);
+		return Vector2<int>(offsetX,offsetY);
 	}
 
 	//Sets the positional offset of the 2D array
-	void SetOffset(sf::Vector2<int> offset)
+	void SetOffset(Vector2<int> offset)
 	{
-		offsetX = offset.x;
-		offsetY = offset.y;
+		offsetX = std::get<0>(offset);
+		offsetY = std::get<1>(offset);
 	}
 
 	//Check if the specified index is within the bounds of the array
@@ -126,21 +127,21 @@ public:
 	}
 
 	//Sets an object at the specified index
-	void Set(ElementType element, sf::Vector2<int> position)
+	void Set(ElementType element, Vector2<int> position)
 	{
-		Set(std::forward(element), position.x, position.y);
+		Set(element, std::get<0>(position), std::get<1>(position));
 	}
 
 	//Gets an object at the specified index
-	const ElementType& operator[](sf::Vector2<int> position) const
+	const ElementType& operator[](Vector2<int> position) const
 	{
-		return Get(position.x, position.y);
+		return Get(std::get<0>(position), std::get<1>(position));
 	}
 
 	//Gets an object at the specified index
-	ElementType& operator[](sf::Vector2<int> position)
+	ElementType& operator[](Vector2<int> position)
 	{
-		return Get(position.x, position.y);
+		return Get(std::get<0>(position), std::get<1>(position));
 	}
 };
 

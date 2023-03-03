@@ -3,7 +3,7 @@
 #include <DungeonEscape/AnimatedEntity.h> //Contains the AnimatedEntity class for entities that are animated
 #include <DungeonEscape/WorldMap.h> //Contains the WorldMap class
 #include <DungeonEscape/ResourceTexture.h> //Contains the ResourceTexture class for loading in texture resources
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+#include <DungeonEscape/Graphics.h> //Contains many essential SFML classes and functions for rendering
 #include <vector> //Contains std::vector for storing objects in an array
 #include <DungeonEscape/Direction.h> //Contains the Direction Enum for specifying the direction
 #include <DungeonEscape/Array2D.h> //Contains the Array2D class, which is for storing objects in a 2D array
@@ -37,7 +37,7 @@ public:
 	static Player* GetCurrentPlayer();
 
 	//Constructs a new player
-	Player(const WorldMap& map, sf::Vector2f spawnPoint);
+	Player(const WorldMap& map, Vector2f spawnPoint);
 
 	//Deleting these four functions prevents the object from being copied or moved
 	Player(const Player& player) = delete;
@@ -63,7 +63,7 @@ public:
 	bool ReachedTheDoor() const;
 
 	//The update loop of the player
-	virtual void Update(sf::Time dt) override;
+	virtual void Update(double dt) override;
 
 	//Destructs the player
 	virtual ~Player();

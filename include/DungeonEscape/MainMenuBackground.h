@@ -8,12 +8,12 @@ class MainMenuBackground : public Renderable
 	static ResourceTexture menuBackgroundTexture; //The texture resource for the main menu background
 
 
-	sf::Sprite menuBackgroundSprite; //The sprite for the menu background
+	smk::Sprite menuBackgroundSprite; //The sprite for the menu background
 
 public:
 
 	//Renders the menu background to the screen
-	virtual void Render(sf::RenderWindow& window) override;
+	virtual void Render(smk::Window& window) override;
 
 	//Constructs a new MainMenuBackground
 	MainMenuBackground();

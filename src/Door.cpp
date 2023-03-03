@@ -4,12 +4,12 @@ Door* Door::currentDoor = nullptr; //A singleton that represents the current doo
 ResourceTexture Door::doorTexture{ RES_DOOR }; //The door's resource texture
 
 //Constructs a new door
-Door::Door(sf::Vector2f doorPosition) :
+Door::Door(Vector2f doorPosition) :
 	//Set the doors sprite to the resource texture
 	doorSprite(doorTexture.GetTexture())
 {
 	//Set the sprite's position
-	doorSprite.setPosition(doorPosition);
+	doorSprite.SetPosition(getX(doorPosition),getY(doorPosition));
 	//Set it's render layer
 	SetRenderLayer(5);
 	//Update the singleton
@@ -26,7 +26,7 @@ Door* Door::GetDoor()
 }
 
 //Gets the sprite of the door
-const sf::Sprite& Door::GetSprite() const
+const smk::Sprite& Door::GetSprite() const
 {
 	return doorSprite;
 }
@@ -42,8 +42,8 @@ Door::~Door()
 }
 
 //Called when the dialog box is to be rendered
-void Door::Render(sf::RenderWindow& window)
+void Door::Render(smk::Window& window)
 {
 	//Draw the door sprite
-	window.draw(doorSprite);
+	window.Draw(doorSprite);
 }

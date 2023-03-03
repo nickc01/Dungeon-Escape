@@ -1,5 +1,6 @@
 #pragma once
 
+#include <DungeonEscape/Graphics.h>
 #include <DungeonEscape/AnimatedEntity.h> //Contains the AnimatedEntity class for entities that are animated
 #include <list> //Contains std::list for storing items in a linked list
 
@@ -7,16 +8,16 @@
 struct PathResult
 {
 public:
-	std::list<sf::Vector2f> Path{}; //The path the enemy will take to get to the player
+	std::list<Vector2f> Path{}; //The path the enemy will take to get to the player
 	bool Success = false; //Whether the algorithm was able to find the player or not
 
 	//Constructs an empty results object
 	PathResult();
 
 	//Constructs a new results object with the specified parameters
-	PathResult(const std::list<sf::Vector2f>& path, bool success);
+	PathResult(const std::list<Vector2f>& path, bool success);
 	//Constructs a new results object with the specified parameters
-	PathResult(std::list<sf::Vector2f>&& path, bool success);
+	PathResult(std::list<Vector2f>&& path, bool success);
 };
 
 //Represents the results of calling the GeneratePathToPlayerAsync() function
@@ -54,6 +55,6 @@ public:
 	Enemy(const WorldMap& map,bool enableCollision = true);
 
 	//The update function that is called each frame
-	virtual void Update(sf::Time dt) override = 0;
+	virtual void Update(double dt) override = 0;
 };
 

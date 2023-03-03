@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+#include <DungeonEscape/Graphics.h> //Contains many essential SFML classes and functions for rendering
 #include <vector> //Contains std::vector for storing objects in an array
 #include <DungeonEscape/ObjectManager.h> //Contains the ObjectManager class, which is used to store a collection of all instantiated objects
 #include <atomic> //Contains std::atomic, which is used to prevent data races over an entire object
@@ -30,7 +30,7 @@ public:
 	void SetRenderLayer(int newLayer);
 
 	//Used to render the object to the scene
-	virtual void Render(sf::RenderWindow& window) = 0;
+	virtual void Render(smk::Window& window) = 0;
 
 	//The destructor
 	virtual ~Renderable();

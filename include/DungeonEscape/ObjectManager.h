@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+#include <DungeonEscape/Graphics.h> //Contains many essential SFML classes and functions for rendering
 #include <algorithm> //Contains many commonly used algorithms such as std::sort and std::finds>
 #include <string> //Contains std::string
 #include <mutex> //Contains std::mutex and std::recursive_mutex for resource locking and to prevent data races
@@ -97,7 +97,7 @@ public:
 	//Copy Assignment
 	ObjectManager<objectType>& operator=(const ObjectManager<objectType>& source) noexcept
 	{
-		SetActive(source.ineList);
+		SetActive(source.inList);
 		return *this;
 
 	}

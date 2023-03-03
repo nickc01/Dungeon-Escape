@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+#include <DungeonEscape/Graphics.h> //Contains many essential SFML classes and functions for rendering
 #include <DungeonEscape/Array2D.h> //Contains the Array2D class, which is for storing objects in a 2D array
 #include <DungeonEscape/BackgroundTile.h> //Contains the BackgroundTile class
 #include <array> //Contains std::array, which is a fixed array type
@@ -10,8 +10,8 @@ enum class Direction; //Forward declare the direction enum to prevent potential 
 //Represents a room the player can go into
 class Room
 {
-	sf::Vector2<int> Center; //The center of the room
-	sf::Vector2<int> Dimensions; //The size of the room
+	Vector2<int> Center; //The center of the room
+	Vector2<int> Dimensions; //The size of the room
 
 	Array2D<std::shared_ptr<BackgroundTile>> backgroundTiles; //The 2D array of background tiles that make up the room
 
@@ -28,7 +28,7 @@ class Room
 	void FindAllBranchesInHierarchy(std::vector<Branch*>& branches);
 
 
-	std::vector<sf::Vector2i> enemySpawnPoints; //The list of all enemy spawnpoints that are in the room
+	std::vector<Vector2i> enemySpawnPoints; //The list of all enemy spawnpoints that are in the room
 
 	//Adds a new enemy spawnpoint to the room
 	void AddEnemySpawnpoint();
@@ -42,17 +42,17 @@ public:
 	static constexpr int MinRoomHeight = 7; //The minimum height of a room
 
 	//Contructs a new room
-	Room(sf::Vector2<int> center, sf::Vector2<int> dimensions, int enemySpawnPoints = 0);
+	Room(Vector2<int> center, Vector2<int> dimensions, int enemySpawnPoints = 0);
 
 	//Retrieves the rect bounds of the room
-	sf::Rect<int> GetRect() const;
+	Rect<int> GetRect() const;
 	//Gets the center coordinates of the room
-	sf::Vector2<int> GetCenter() const;
+	Vector2<int> GetCenter() const;
 	//Sets the center of the room
-	void SetCenter(sf::Vector2<int> center);
+	void SetCenter(Vector2<int> center);
 
 	//Gets the dimensions of the room
-	sf::Vector2<int> GetDimensions() const;
+	Vector2<int> GetDimensions() const;
 
 	//Gets the width of the room
 	int GetWidth() const;
@@ -69,9 +69,9 @@ public:
 	void SetBranch(Direction direction, std::shared_ptr<Branch> branch);
 
 	//Returns the list of all enemy spawnpoints
-	const std::vector<sf::Vector2i>& GetEnemySpawnPoints() const;
+	const std::vector<Vector2i>& GetEnemySpawnPoints() const;
 	//Returns the list of all enemy spawnpoints
-	std::vector<sf::Vector2i>& GetEnemySpawnPoints();
+	std::vector<Vector2i>& GetEnemySpawnPoints();
 
 	//Checks if the room intersects with a specified background tile
 	bool Intersects(const BackgroundTile& tile) const;
@@ -79,14 +79,14 @@ public:
 	bool Intersects(const Room& B) const;
 
 	//Gets a room's background tile at the specified position
-	const std::shared_ptr<BackgroundTile>& GetTile(sf::Vector2<int> position) const;
+	const std::shared_ptr<BackgroundTile>& GetTile(Vector2<int> position) const;
 	//Gets a room's background tile at the specified position
-	std::shared_ptr<BackgroundTile>& GetTile(sf::Vector2<int> position);
+	std::shared_ptr<BackgroundTile>& GetTile(Vector2<int> position);
 
 	//Gets a room's background tile at the specified position
-	const std::shared_ptr<BackgroundTile>& operator[](sf::Vector2<int> position) const;
+	const std::shared_ptr<BackgroundTile>& operator[](Vector2<int> position) const;
 	//Gets a room's background tile at the specified position
-	std::shared_ptr<BackgroundTile>& operator[](sf::Vector2<int> position);
+	std::shared_ptr<BackgroundTile>& operator[](Vector2<int> position);
 
 
 	//Checks to see if a newly added room will collide with anything in the room hierarchy

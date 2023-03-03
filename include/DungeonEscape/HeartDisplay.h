@@ -12,7 +12,7 @@ class HeartDisplay : public Renderable
 	const Player& player;
 
 	//The heart display sprite
-	sf::Sprite heartSprite;
+	smk::Sprite heartSprite;
 
 public:
 
@@ -20,5 +20,5 @@ public:
 	HeartDisplay(const Player& player);
 
 	//Renders the heart display to the screen
-	virtual void Render(sf::RenderWindow& window) override;
+	virtual void Render(smk::Window& window) override;
 };

@@ -1,6 +1,7 @@
 #pragma once
 
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+#include <DungeonEscape/Graphics.h>
+//#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
 
 //Represents the four cardinal directions
 enum class Direction
@@ -14,43 +15,43 @@ enum class Direction
 
 //Returns a vector pointing in the specified direction with a specified scalar length
 template<typename type = int>
-sf::Vector2<type> VectorInDirection(Direction direction, int scalar)
+Vector2<type> VectorInDirection(Direction direction, int scalar)
 {
 	switch (direction)
 	{
 		//If the direction is up
 	case Direction::Up:
 		//Return a vector pointing in that direction
-		return sf::Vector2<type>(0, scalar);
+		return Vector2<type>(0, scalar);
 		//If the direction is right
 	case Direction::Right:
 		//Return a vector pointing in that direction
-		return sf::Vector2<type>(scalar, 0);
+		return Vector2<type>(scalar, 0);
 		//If the direction is down
 	case Direction::Down:
 		//Return a vector pointing in that direction
-		return sf::Vector2<type>(0, -scalar);
+		return Vector2<type>(0, -scalar);
 		//If the direction is left
 	case Direction::Left:
 		//Return a vector pointing in that direction
-		return sf::Vector2<type>(-scalar, 0);
+		return Vector2<type>(-scalar, 0);
 	}
 	//A default if no matches were made
-	return sf::Vector2<type>(0, 0);
+	return Vector2<type>(0, 0);
 }
 
 //Rotates the direction by a specified amount of degrees. Only 90 degree turns are valid
 template<typename type = int>
 Direction RotateDirection(Direction source, type amount)
 {
-	//Conver the direction to a number in degrees
+	//Convert the direction to a number in degrees
 	type numDirection = static_cast<type>(source);
 
 	//Rotate the direction by the specified amount
 	numDirection += amount;
 
 	//If the direction is greater than 360, then loop back around to 0
-	numDirection %= 360;
+	numDirection = static_cast<type>(remainder(numDirection,360.0));
 
 	//If the direction is less than zero, add 360 to it
 	if (numDirection < 0)
@@ -70,31 +71,31 @@ Direction FlipDirection(Direction direction);
 
 //Converts a vector to a direction if it aligns with any of the cardial directions
 template<typename VectorType>
-Direction DirectionFromVector(sf::Vector2<VectorType> vector)
+Direction DirectionFromVector(Vector2<VectorType> vector)
 {
 	//Represents zero
 	constexpr VectorType zero = static_cast<VectorType>(0);
 
 	//If the vector is pointing up
-	if (vector.x == zero && vector.y > zero)
+	if (std::get<0>(vector) == zero && std::get<1>(vector) > zero)
 	{
 		//Return the Up Direction
 		return Direction::Up;
 	}
 	//If the vector is pointing down
-	else if (vector.x == zero && vector.y < zero)
+	else if (std::get<0>(vector) == zero && std::get<1>(vector) < zero)
 	{
 		//Return the Down Direction
 		return Direction::Down;
 	}
 	//If the vector is pointing right
-	else if (vector.x > zero && vector.y == zero)
+	else if (std::get<0>(vector) > zero && std::get<1>(vector) == zero)
 	{
 		//Return the Right Direction
 		return Direction::Right;
 	}
 	//If the vector is pointing left
-	else if (vector.x < zero && vector.y == zero)
+	else if (std::get<0>(vector) < zero && std::get<1>(vector) == zero)
 	{
 		//Return the Left Direction
 		return Direction::Left;

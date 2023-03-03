@@ -1,17 +1,17 @@
 #pragma once
 
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+#include <DungeonEscape/Graphics.h> //Contains many essential SFML classes and functions for rendering
 
 #include <string> //Contains std::string
-#include <SFML/System.hpp>
+//#include <SFML/System.hpp>
 
 //Loads a SFML Texture from a resource
 class ResourceTexture
 {
 	//The resource to load
-	sf::FileInputStream texture_file;
+	smk::FileInputStream texture_file;
 
-	sf::Texture texture; //The loaded Texture
+	smk::Texture texture; //The loaded Texture
 
 public:
 
@@ -24,9 +24,9 @@ public:
 	ResourceTexture();
 
 	//Gets the texture that was loaded
-	const sf::Texture& GetTexture() const;
+	const smk::Texture& GetTexture() const;
 
 	//Gets the texture that was loaded
-	sf::Texture& GetTexture();
+	smk::Texture& GetTexture();
 };
 

@@ -9,7 +9,7 @@ class DialogBoxSprite : public Renderable
 	static ResourceTexture dialogBoxTexture;
 
 	//The sprite of the dialog box
-	sf::Sprite dialogBoxSprite;
+	smk::Sprite dialogBoxSprite;
 public:
 
 	//Constructs a new dialog box
@@ -18,7 +18,7 @@ public:
 
 
 	//Called when the dialog box is to be rendered
-	virtual void Render(sf::RenderWindow& window) override;
+	virtual void Render(smk::Window& window) override;
 
 };
 

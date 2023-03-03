@@ -8,7 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/bin/${CMAKE_BUILD_TYPE}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/bin/${CMAKE_BUILD_TYPE}")
 
-add_subdirectory(lib/SFML)
+add_subdirectory(lib/smk)
+ #add_subdirectory(lib/SFML)
+
+#set (SFML_DIR "C:/SFML/lib/cmake/SFML")
+#add_subdirectory(lib/is-Engine)
 
 add_executable(${PROJECT_NAME}	"src/main.cpp"
 								"src/AnimatedEntity.cpp"
@@ -61,7 +65,7 @@ add_executable(${PROJECT_NAME}	"src/main.cpp"
 								"include/DungeonEscape/SkeletonEnemy.h"
 								"include/DungeonEscape/ThreadPool.h"
 								"include/DungeonEscape/UpdateReceiver.h"
-								"include/DungeonEscape/WorldMap.h")
+								"include/DungeonEscape/WorldMap.h" "include/DungeonEscape/Vector.h" "include/DungeonEscape/Graphics.h" "include/DungeonEscape/Rect.h")
 
 
 file(GLOB_RECURSE RESOURCE_FILES
@@ -77,11 +81,13 @@ foreach(file ${RESOURCE_FILES})
 endforeach()
 
 
-target_link_libraries(${PROJECT_NAME} PUBLIC sfml-audio sfml-graphics sfml-network sfml-system sfml-window)
+#target_link_libraries(${PROJECT_NAME} PUBLIC sfml-audio sfml-graphics sfml-network sfml-system sfml-window)
 
-IF (WIN32)
-	target_link_libraries(${PROJECT_NAME} PUBLIC sfml-main)
-ENDIF()
+#IF (WIN32)
+#	target_link_libraries(${PROJECT_NAME} PUBLIC sfml-main)
+#ENDIF()
+
+target_link_libraries(${PROJECT_NAME} PUBLIC smk)
 
 find_package(Threads REQUIRED)
 if(THREADS_HAVE_PTHREAD_ARG)
@@ -91,9 +97,28 @@ if(CMAKE_THREAD_LIBS_INIT)
   target_link_libraries(${PROJECT_NAME} PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
+if(EMSCRIPTEN)
+  set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS  " -s WASM=1")
+
+  # Copy the index.html file.
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/index.html
+    ${CMAKE_CURRENT_BINARY_DIR}/index.html
+    COPYONLY
+  )
+
+  # Copy the run_webassembly.py file.
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/run_webassembly.py
+    ${CMAKE_CURRENT_BINARY_DIR}/run_webassembly.py
+    COPYONLY
+  )
+endif()
+
 
 
 target_include_directories(${PROJECT_NAME} PUBLIC "include")
+#target_include_directories(${PROJECT_NAME} PUBLIC "lib/smk/include")
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory

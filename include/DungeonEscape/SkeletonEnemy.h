@@ -17,19 +17,19 @@ class SkeletonEnemy : public Enemy
 	//How fast the skeleton should move around the map
 	float movementSpeed = static_cast<float>(Common::RandomNumber(200, 2000)) * (80.0f / 2000.0f);
 
-	std::list<sf::Vector2f> pathToPlayer; //Stores the path to the player
+	std::list<Vector2f> pathToPlayer; //Stores the path to the player
 
 	float stunTimer = 0.0f; //Stores how long the enemy should be stunned for
 	bool stunned = false; //Whether the enemy is stunned or not
-	sf::Vector2f stunDirection; //The direction the enemy will travel when stunned
+	Vector2f stunDirection; //The direction the enemy will travel when stunned
 
 public:
 
 	//Constructs a new skeleton enemy
-	SkeletonEnemy(const WorldMap& map, sf::Vector2f spawnPoint);
+	SkeletonEnemy(const WorldMap& map, Vector2f spawnPoint);
 
 	//The update loop for the skeleton
-	virtual void Update(sf::Time dt) override;
+	virtual void Update(double dt) override;
 
 	//Whether the enemy is stunned or not
 	bool IsStunned() const;

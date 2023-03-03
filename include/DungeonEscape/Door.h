@@ -9,21 +9,21 @@ class Door : public Renderable
 	static Door* currentDoor; //A singleton that represents the current door in the world map
 	static ResourceTexture doorTexture; //The door's resource texture
 
-	sf::Sprite doorSprite; //The door's sprite
+	smk::Sprite doorSprite; //The door's sprite
 
 	//Called when the dialog box is to be rendered
-	virtual void Render(sf::RenderWindow& window) override;
+	virtual void Render(smk::Window& window) override;
 
 public:
 
 	//Constructs a new door
-	Door(sf::Vector2f doorPosition);
+	Door(Vector2f doorPosition);
 
 	//Gets the singleton that represents the door in the world map
 	static Door* GetDoor();
 
 	//Gets the sprite of the door
-	const sf::Sprite& GetSprite() const;
+	const smk::Sprite& GetSprite() const;
 
 	//Deleting these four functions prevents the object from being copied or moved
 	Door(const Door&) = delete;

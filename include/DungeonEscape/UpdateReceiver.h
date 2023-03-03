@@ -1,7 +1,7 @@
 #pragma once
 
 #include <DungeonEscape/ObjectManager.h> //Contains the ObjectManager class, which is used to store a collection of all instantiated objects
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+#include <DungeonEscape/Graphics.h> //Contains many essential SFML classes and functions for rendering
 
 //Allows objects to receive update events
 class UpdateReceiver : public ObjectManager<UpdateReceiver>
@@ -17,6 +17,6 @@ public:
 	static std::vector<UpdateReceiver*>& GetUpdatables();
 
 	//The update loop
-	virtual void Update(sf::Time dt) = 0;
+	virtual void Update(double dt) = 0;
 };
 

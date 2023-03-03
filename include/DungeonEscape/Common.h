@@ -1,7 +1,8 @@
 #pragma once
 
 
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+//#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+#include <DungeonEscape/Graphics.h>
 #include <string> //Contains std::string
 #include <memory> //Contains std::shared_ptr and std::unique_ptr
 #include <DungeonEscape/Direction.h> //Contains the Direction Enum for specifying the direction
@@ -14,22 +15,22 @@ namespace Common
 	{
 		//A list of all common sprites used for both the rooms and the branches
 
-		extern sf::Sprite centerPiece1;
-		extern sf::Sprite centerPiece2;
+		extern smk::Sprite centerPiece1;
+		extern smk::Sprite centerPiece2;
 
-		extern sf::Sprite topJointPiece;
-		extern sf::Sprite bottomJointPiece;
-		extern sf::Sprite leftJointPiece;
-		extern sf::Sprite rightJointPiece;
+		extern smk::Sprite topJointPiece;
+		extern smk::Sprite bottomJointPiece;
+		extern smk::Sprite leftJointPiece;
+		extern smk::Sprite rightJointPiece;
 
-		extern sf::Sprite topLeftPiece;
-		extern sf::Sprite topRightPiece;
-		extern sf::Sprite bottomLeftPiece;
-		extern sf::Sprite bottomRightPiece;
-		extern sf::Sprite topPiece;
-		extern sf::Sprite bottomPiece;
-		extern sf::Sprite rightPiece;
-		extern sf::Sprite leftPiece;
+		extern smk::Sprite topLeftPiece;
+		extern smk::Sprite topRightPiece;
+		extern smk::Sprite bottomLeftPiece;
+		extern smk::Sprite bottomRightPiece;
+		extern smk::Sprite topPiece;
+		extern smk::Sprite bottomPiece;
+		extern smk::Sprite rightPiece;
+		extern smk::Sprite leftPiece;
 
 	}
 
@@ -58,36 +59,36 @@ namespace Common
 	}
 
 	//The main render window the game will take place in
-	extern sf::RenderWindow MainWindow;
+	extern smk::Window MainWindow;
 
 	//Creates all the common sprites used in the game
 	void CreateSprites();
 
 	//Gets a random sprite that can be used as a center tile
-	sf::Sprite GetCenterSprite();
+	smk::Sprite GetCenterSprite();
 
 	//Gets a joint sprite that can be used as a joint piece pointing in a specified direction
-	sf::Sprite GetJointPiece(Direction source, Direction to);
+	smk::Sprite GetJointPiece(Direction source, Direction to);
 	//Gets a sprite that represents a side wall
-	sf::Sprite GetSideSprite(Direction side);
+	smk::Sprite GetSideSprite(Direction side);
 
 	//Gets a sprite that represents a corner
-	sf::Sprite GetCornerSprite(Direction A, Direction B);
+	smk::Sprite GetCornerSprite(Direction A, Direction B);
 
 	//Checks whether two sprites intersect. Optionally scaling their hitboxes by a scale factor
-	bool SpritesIntersect(const sf::Sprite& A, const sf::Sprite& B, sf::Vector2f scaleFactor);
+	bool SpritesIntersect(const smk::Sprite& A, const smk::Sprite& B, Vector2f scaleFactor);
 	//Checks whether two sprites intersect
-	bool SpritesIntersect(const sf::Sprite& A, const sf::Sprite& B);
+	bool SpritesIntersect(const smk::Sprite& A, const smk::Sprite& B);
 	//Checks whether two sprites intersect. Optionally scaling their hitboxes by their texture sizes if set to true
-	bool SpritesIntersect(const sf::Sprite& A, const sf::Sprite& B, bool scaleByTextureSize);
+	bool SpritesIntersect(const smk::Sprite& A, const smk::Sprite& B, bool scaleByTextureSize);
 
 	//Refreshes the size of the window. This is normally used when the window gets resized
-	void RefreshWindow(sf::RenderWindow& window = Common::MainWindow);
+	void RefreshWindow(smk::Window& window = Common::MainWindow);
 	//Gets the mouse position in world coordinates
-	sf::Vector2f GetMouseWorldCoordinates(sf::RenderWindow& window = Common::MainWindow);
+	Vector2f GetMouseWorldCoordinates(smk::Window& window = Common::MainWindow);
 
 	//Centers the camera over a specified point
-	void CenterCamera(sf::Vector2f center, sf::RenderWindow& window = Common::MainWindow);
+	void CenterCamera(Vector2f center, smk::Window& window = Common::MainWindow);
 
 	//Gets a random number between the minRange (inclusive) and the maxRange (exclusive)
 	int RandomNumber(int minRange, int maxRange);

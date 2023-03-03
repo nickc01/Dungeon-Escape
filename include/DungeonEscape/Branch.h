@@ -1,10 +1,12 @@
 #pragma once
-#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
-
+//#include <SFML/Graphics.hpp> //Contains many essential SFML classes and functions for rendering
+#include <smk/Sprite.hpp>
+#include <DungeonEscape/Vector.h>
 #include <DungeonEscape/Direction.h> //Contains the Direction Enum for specifying the direction
 #include <DungeonEscape/Common.h> //Contains many common game functions and variables
 #include <vector> //Contains std::vector for storing objects in an array
 #include <DungeonEscape/BackgroundTile.h> //Contains the BackgroundTile class
+
 
 class Room; //Forward declare the room class to prevent circular dependencies
 
@@ -22,7 +24,7 @@ class Branch
 	Direction midSectionDirection = Direction::Up; //The direction the middle section will be traveling in
 	Direction direction; //The main direction the branch path is taking
 
-	sf::Vector2<int> startPoint = sf::Vector2<int>(0, 0); //The point where the branch path starts
+	Vector2<int> startPoint = Vector2<int>(0, 0); //The point where the branch path starts
 
 	std::vector<std::shared_ptr<BackgroundTile>> tiles; //The tiles that make up the branch path
 	std::vector<bool> canOverlap; //An array that determines which tiles can safely overlap rooms or not
@@ -31,13 +33,13 @@ class Branch
 	void CreateTiles();
 
 	//Builds a single tile
-	void BuildTile(const sf::Sprite& sprite, sf::Vector2<int> position, bool canOverlap = false);
+	void BuildTile(const smk::Sprite& sprite, Vector2<int> position, bool canOverlap = false);
 	//Builds a new joint piece at the specified position
-	void BuildJointPiece(Direction direction, sf::Vector2i position);
+	void BuildJointPiece(Direction direction, Vector2i position);
 	//Builds a new straight piece at the specified position
-	void BuildStraightPiece(Direction direction, sf::Vector2i position);
+	void BuildStraightPiece(Direction direction, Vector2i position);
 	//Builds a curve piece at the specified position
-	void BuildCurvePiece(Direction from, Direction to, sf::Vector2i position);
+	void BuildCurvePiece(Direction from, Direction to, Vector2i position);
 
 public:
 
@@ -54,11 +56,11 @@ public:
 	Direction GetDirection();
 
 	//Sets the starting point for the branch
-	void SetStartPoint(sf::Vector2<int> point);
+	void SetStartPoint(Vector2<int> point);
 	//Gets the starting point of the branch
-	sf::Vector2<int> GetStartPoint();
+	Vector2<int> GetStartPoint();
 	//Gets the destination point of the branch
-	sf::Vector2<int> GetDestinationPoint();
+	Vector2<int> GetDestinationPoint();
 
 	//Gets all the tiles that make up the branch
 	const std::vector<std::shared_ptr<BackgroundTile>>& GetTiles();

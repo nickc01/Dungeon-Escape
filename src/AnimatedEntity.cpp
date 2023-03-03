@@ -47,7 +47,7 @@ void AnimatedEntity::SetAnimationGroup(std::string animationGroup)
 }
 
 //Adds an existing sprite to an animation group
-void AnimatedEntity::AddSprite(std::string group, sf::Sprite sprite)
+void AnimatedEntity::AddSprite(std::string group, smk::Sprite sprite)
 {
 	//Get the sprite list from the animation group. This creates a new list if it doesn't exist already
 	auto& vector = animationGroups[group];
@@ -58,16 +58,16 @@ void AnimatedEntity::AddSprite(std::string group, sf::Sprite sprite)
 
 
 //Constructs a new sprite and adds it to an animation group
-void AnimatedEntity::EmplaceSprite(std::string group, sf::Texture& texture, sf::Rect<int> rect,sf::Vector2f scale)
+void AnimatedEntity::EmplaceSprite(std::string group, smk::Texture& texture, Rect<int> rect,Vector2f scale)
 {
 	//Get the sprite list from the animation group. This creates a new list if it doesn't exist already
 	auto& vector = animationGroups[group];
 
 	//Construct the sprite
-	sf::Sprite sprite = sf::Sprite(texture, rect);
+	smk::Sprite sprite = smk::Sprite(texture, rect);
 
 	//Set the sprite's scale
-	sprite.setScale(scale);
+	sprite.SetScale(std::get<0>(scale), std::get<1>(scale));
 
 	//Add the sprite to the back of the sprite list
 	vector.push_back(sprite);
@@ -75,7 +75,7 @@ void AnimatedEntity::EmplaceSprite(std::string group, sf::Texture& texture, sf::
 
 
 //Runs the specified animation sprite group if one is currently set
-void AnimatedEntity::UpdateAnimations(sf::Time dt)
+void AnimatedEntity::UpdateAnimations(double dt)
 {
 	//If there are no animation groups specified
 	if (animationGroups.count(currentAnimationGroup) == 0)
@@ -85,7 +85,7 @@ void AnimatedEntity::UpdateAnimations(sf::Time dt)
 	}
 
 	//Increase the animation timer
-	animationTimer += dt.asSeconds();
+	animationTimer += dt;
 
 	//If the timer is greater than the specified animation speed
 	if (animationTimer >= animationSpeed)

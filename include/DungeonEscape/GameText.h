@@ -7,21 +7,21 @@ class GameText : public Renderable
 {
 	static ResourceFont mainGameFont; //The main game font resource
 
-	sf::Text text; //The text object
+	smk::Text text; //The text object
 
 public:
 
 	//Constructs a new GameText object
-	GameText(const std::string text, sf::Vector2f position, unsigned int characterSize = 300u, sf::Vector2f scale = sf::Vector2f(0.1f,0.1f));
+	GameText(const std::string text, Vector2f position, unsigned int characterSize = 300u, Vector2f scale = Vector2f(0.1f,0.1f));
 
 	//Get the text object stored in the GameText object
-	sf::Text& GetText();
+	smk::Text& GetText();
 	//Get the text object stored in the GameText object
-	const sf::Text& GetText() const;
+	const smk::Text& GetText() const;
 
 
 	//Renders the GameText object
-	virtual void Render(sf::RenderWindow& window) override;
+	virtual void Render(smk::Window& window) override;
 
 };
 
