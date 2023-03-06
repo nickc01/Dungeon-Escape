@@ -117,29 +117,40 @@ namespace Math
 	bool RectsIntersect(Rect<RectType> A, Rect<RectType> B)
 	{
 		//Get the left side of rect A
-		auto leftA = A.left;
+		auto leftA = A.left;				// -4
 		//Get the right side of rect A
-		auto rightA = A.left + A.width;
+		auto rightA = A.left + A.width;		// 5
 		//Get the top side of rect A
-		auto topA = A.top;
+		auto topA = A.top;					// 4
 		//Get the bottom side of rect A
-		auto bottomA = A.top - A.height;
+		auto bottomA = A.top - A.height;	// -4
 
 		//Get the left side of rect B
-		auto leftB = B.left;
+		auto leftB = B.left;				// 0
 		//Get the right side of rect B
-		auto rightB = B.left + B.width;
+		auto rightB = B.left + B.width;		// 1
 		//Get the top side of rect B
-		auto topB = B.top;
+		auto topB = B.top;					// 0
 		//Get the bottom side of rect B
-		auto bottomB = B.top - B.height;
+		auto bottomB = B.top - B.height;	// -1
 
 		//If the rects intersect
-		if (leftA < rightB && rightA > leftB&& topA > bottomB&& bottomA < topB)
+
+		//-4 < 1 && 5 > 0 && 4 > -1 && -4 < 0
+		/*if (leftA < rightB && rightA > leftB && topA > bottomB && bottomA < topB)
+		{
+			return true;
+		}*/
+
+		if ((leftA > rightB) || (rightA < leftB) || (topA > bottomB) || (bottomA < topB))
+		{
+			return false;
+		}
+		else
 		{
 			return true;
 		}
-		return false;
+		//return false;
 	}
 
 	//Determines if two sprites interect

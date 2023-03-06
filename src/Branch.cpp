@@ -2,7 +2,7 @@
 #include <DungeonEscape/Room.h> //Contains the Room class that represents individual rooms in the game
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace smk; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 
 //Creates all the tiles that make up the branch
 void Branch::CreateTiles()

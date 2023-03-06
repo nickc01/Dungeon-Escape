@@ -1,6 +1,6 @@
 #include <DungeonEscape/BackgroundTile.h> //Contains the BackgroundTile class
 
-using namespace smk; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 
 //Constructs a new background tile with the specified sprite
 BackgroundTile::BackgroundTile(const Sprite& sprite, bool collidable) :
@@ -15,7 +15,7 @@ BackgroundTile::BackgroundTile(const Sprite& sprite, Vector2<int> position, bool
 	BackgroundTile(sprite,collidable)
 {
 	//Set the sprite's position
-	this->sprite.SetPosition(std::get<0>(position),std::get<1>(position));
+	this->sprite.SetPosition(position.x,position.y);
 }
 
 //Returns whether the sprite is colidable or not

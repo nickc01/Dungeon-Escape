@@ -1,15 +1,23 @@
 #include <DungeonEscape/Door.h> //Contains the Door class, which is where the player enters to win the game
 
 Door* Door::currentDoor = nullptr; //A singleton that represents the current door in the world map
-ResourceTexture Door::doorTexture{ RES_DOOR }; //The door's resource texture
+ResourceTexture Door::doorTexture; //The door's resource texture
+
+//TODO - FIX THE ABOVE doorTexture code so it doesn't crash
 
 //Constructs a new door
-Door::Door(Vector2f doorPosition) :
-	//Set the doors sprite to the resource texture
-	doorSprite(doorTexture.GetTexture())
+Door::Door(Vector2f doorPosition)
 {
+	if (!doorTexture.Loaded())
+	{
+		doorTexture = ResourceTexture{ RES_DOOR };
+	}
+
+	//Set the doors sprite to the resource texture
+	doorSprite = smk::Sprite(doorTexture.GetTexture());
+
 	//Set the sprite's position
-	doorSprite.SetPosition(getX(doorPosition),getY(doorPosition));
+	doorSprite.SetPosition(doorPosition.x,doorPosition.y);
 	//Set it's render layer
 	SetRenderLayer(5);
 	//Update the singleton

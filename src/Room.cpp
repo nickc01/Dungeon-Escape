@@ -2,7 +2,7 @@
 #include <DungeonEscape/Branch.h> //Contains the Branch class for creating paths to connect rooms
 #include <DungeonEscape/Math.h> //Contains many commonly used math functions
 
-using namespace sf; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 using namespace std; //Prevents me from having to type std everywhere
 
 //Finds an room that has a spot avaiable for a new branch to be installed
@@ -319,13 +319,13 @@ void Room::SetBranch(Direction direction, std::shared_ptr<Branch> branch)
 }
 
 //Returns the list of all enemy spawnpoints
-const std::vector<sf::Vector2i>& Room::GetEnemySpawnPoints() const
+const std::vector<Vector2i>& Room::GetEnemySpawnPoints() const
 {
 	return enemySpawnPoints;
 }
 
 //Returns the list of all enemy spawnpoints
-std::vector<sf::Vector2i>& Room::GetEnemySpawnPoints()
+std::vector<Vector2i>& Room::GetEnemySpawnPoints()
 {
 	return enemySpawnPoints;
 }
@@ -337,13 +337,13 @@ bool Room::Intersects(const BackgroundTile& tile) const
 	//Get the rect bounds of the room
 	auto rectA = Rect<float>(GetRect());
 	//Get the rect bounds of the background tile
-	auto rectB = tile.GetSprite().getGlobalBounds();
+	auto rectB = FloatRect(tile.GetSprite().getGlobalBounds());
 
-	auto tileSize = tile.GetSprite().getTextureRect();
+	//auto tileSize = tile.GetSprite().getTextureRect();
 
 	//Divide the bounds of the tile with it's textureSize
-	rectB.width /= tileSize.width;
-	rectB.height /= tileSize.height;
+	rectB.width /= tile.GetSprite().texture().width();
+	rectB.height /= tile.GetSprite().texture().height();
 
 	//Check if they intersect
 	return Math::RectsIntersect(rectA, rectB);
@@ -432,6 +432,16 @@ bool Room::CheckForCollision(const Room* addedRoom)
 			//Check if the room intersects with any of them
 			if (addedRoom->Intersects(*tile))
 			{
+				//Get the rect bounds of the room
+				auto rectA = Rect<float>(GetRect());
+				//Get the rect bounds of the background tile
+				auto rectB = FloatRect(tile->GetSprite().getGlobalBounds());
+
+				//auto tileSize = tile.GetSprite().getTextureRect();
+
+				//Divide the bounds of the tile with it's textureSize
+				rectB.width /= tile->GetSprite().texture().width();
+				rectB.height /= tile->GetSprite().texture().height();
 				//If it does, then return true that there is a collision
 				return true;
 			}

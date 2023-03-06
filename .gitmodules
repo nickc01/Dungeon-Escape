@@ -1,3 +1,6 @@
 [submodule "lib/SFML"]
 	path = lib/SFML
 	url = https://github.com/SFML/SFML.git
+[submodule "lib/smk"]
+	path = lib/smk
+	url = https://github.com/nickc01/smk.git

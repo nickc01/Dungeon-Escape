@@ -1,15 +1,14 @@
 #include <DungeonEscape/ResourceFont.h> //Contains the ResourceFont class, which is used to load font resources
 
 //Constructs and loads the font into memory
-ResourceFont::ResourceFont(std::string file_path)
+ResourceFont::ResourceFont(std::string file_path, float line_height) :
+	font(file_path, line_height),
+	_loaded(true)
 {
-	font_file.open(file_path);
 
-	//Load the font from the resource
-	font.loadFromStream(font_file);
 }
 
-ResourceFont::ResourceFont(const char* file_path) : ResourceFont(std::string(file_path))
+ResourceFont::ResourceFont(const char* file_path, float line_height) : ResourceFont(std::string(file_path, line_height))
 {
 
 }
@@ -18,13 +17,18 @@ ResourceFont::ResourceFont(const char* file_path) : ResourceFont(std::string(fil
 ResourceFont::ResourceFont() {}
 
 //Gets the font that was loaded
-const sf::Font& ResourceFont::GetFont() const
+const smk::Font& ResourceFont::GetFont() const
 {
 	return font;
 }
 
 //Gets the font that was loaded
-sf::Font& ResourceFont::GetFont()
+smk::Font& ResourceFont::GetFont()
 {
 	return font;
+}
+
+bool ResourceFont::Loaded() const
+{
+	return _loaded;
 }

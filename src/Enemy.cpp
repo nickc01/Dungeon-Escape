@@ -8,7 +8,7 @@
 #include <smk/Sprite.hpp>
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace smk; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 
 namespace
 {
@@ -44,17 +44,17 @@ namespace
 		std::array<std::tuple<BackgroundTile*,Vector2i>, 4> Tiles; //Stores the four neighboring tiles and their positions
 
 		//Setup the neighboring positions
-		positions[0] = Vector2i(getX(position) + 1, getY(position));
-		positions[1] = Vector2i(getX(position) - 1, getY(position));
-		positions[2] = Vector2i(getX(position), getY(position) + 1);
-		positions[3] = Vector2i(getX(position), getY(position) - 1);
+		positions[0] = Vector2i(position.x + 1, position.y);
+		positions[1] = Vector2i(position.x - 1, position.y);
+		positions[2] = Vector2i(position.x, position.y + 1);
+		positions[3] = Vector2i(position.x, position.y - 1);
 
 		//Loop over all the positions
 		for (int i = 0; i < positions.size(); i++)
 		{
 			//Get the tiles at the corresponding positions
 			auto& pos = positions[i];
-			Tiles[i] = {map.GetTile(getX(pos),getY(pos)),pos};
+			Tiles[i] = {map.GetTile(pos.x,pos.y),pos};
 		}
 		//Return the tiles and their positions
 		return Tiles;
@@ -80,10 +80,10 @@ PathResult Enemy::GeneratePathToPlayer()
 	}
 
 	//Get the player's position
-	auto playerPos = player->GetSprite()->getPosition();
+	auto playerPos = player->GetSprite()->position();
 
 	//Get the enemy position
-	auto enemyPos = GetSprite()->getPosition();
+	auto enemyPos = GetSprite()->position();
 
 	//Get the size of each tile
 	auto mapTileSize = GetMap().GetTileSize();

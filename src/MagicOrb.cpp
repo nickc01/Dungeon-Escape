@@ -4,7 +4,7 @@
 #include <DungeonEscape/Common.h> //Contains many common game functions and variables
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 
 namespace
 {
@@ -13,27 +13,34 @@ namespace
 	constexpr float LIFETIME = 3.0f; //How long the orb will live before it's automatically destroyed
 }
 
-ResourceTexture MagicOrb::orbTexture{RES_POWERORB}; //The texture resource for the magic orb
+ResourceTexture MagicOrb::orbTexture; //The texture resource for the magic orb
 recursive_mutex MagicOrb::orbsMutex{}; //The mutex of the list of spawned orbs
 std::list<std::shared_ptr<MagicOrb>> MagicOrb::SpawnedOrbs{}; //The list of spawned orbs
 
 //Constructs a new magic orb
 MagicOrb::MagicOrb(const WorldMap& map, Vector2f spawnPoint, Vector2f direction) :
 	Entity(map,false),
-	map(map),
-	orbSprite(orbTexture.GetTexture()),
-	direction(direction)
+	map(map)
 {
+	if (!orbTexture.Loaded())
+	{
+		orbTexture = ResourceTexture{ RES_POWERORB };
+	}
+
+	orbSprite = smk::Sprite(orbTexture.GetTexture());
+	this->direction = direction;
+
 	//Reset the invincibility timer
 	spawnInvincibilityTimer = SPAWN_INVINCIBILITY_TIME;
 
 	//Get the texture size of the magic orb texture
-	auto textureSize = orbTexture.GetTexture().getSize();
+	auto texture = orbTexture.GetTexture();
+	auto textureSize = Vector2i(texture.width(),texture.height());
 
 	//Set the sprite's origin to be the center of the texture
-	orbSprite.setOrigin(Vector2f(textureSize.x / 2u,textureSize.y / 2u));
+	orbSprite.SetCenter(Vector2f(textureSize.x / 2u,textureSize.y / 2u));
 	//Set the position of the sprite to the spawnpoint
-	orbSprite.setPosition(spawnPoint);
+	orbSprite.SetPosition(spawnPoint);
 	//Set the sprite to be the orb sprite
 	SetSprite(&orbSprite);
 
@@ -41,7 +48,7 @@ MagicOrb::MagicOrb(const WorldMap& map, Vector2f spawnPoint, Vector2f direction)
 	SetRenderLayer(200);
 
 	//Make the orb semi-transparent
-	orbSprite.setColor({ 255,255,255,128 });
+	orbSprite.SetColor({ 255,255,255,128 });
 }
 
 //Gets the mutex for the list of spawned orbs
@@ -57,7 +64,7 @@ const std::list<std::shared_ptr<MagicOrb>>& MagicOrb::GetAllOrbs()
 }
 
 //Fires a new magic orb
-std::shared_ptr<MagicOrb> MagicOrb::Fire(const WorldMap& map, sf::Vector2f spawnPoint, sf::Vector2f direction)
+std::shared_ptr<MagicOrb> MagicOrb::Fire(const WorldMap& map, Vector2f spawnPoint, Vector2f direction)
 {
 	//Create the new magic orb object
 	auto orbObject = shared_ptr<MagicOrb>(new MagicOrb(map, spawnPoint,Math::NormalizeVector(direction)));
@@ -77,7 +84,7 @@ std::shared_ptr<MagicOrb> MagicOrb::Fire(const WorldMap& map, sf::Vector2f spawn
 }
 
 //Fires a new magic orb
-std::shared_ptr<MagicOrb> MagicOrb::Fire(const WorldMap& map, sf::Vector2f spawnPoint, Direction direction)
+std::shared_ptr<MagicOrb> MagicOrb::Fire(const WorldMap& map, Vector2f spawnPoint, Direction direction)
 {
 	//Convert the direction enum to a vector
 	auto vectorDirection = VectorInDirection<float>(direction, 1.0f);
@@ -112,30 +119,30 @@ void MagicOrb::Destroy()
 }
 
 //Renders the magic orb to the screen
-void MagicOrb::Render(sf::RenderWindow& window)
+void MagicOrb::Render(smk::Window& window)
 {
 	//If the orb is alive
 	if (alive)
 	{
 		//Draw it to the screen
-		window.draw(orbSprite);
+		window.Draw(orbSprite);
 	}
 }
 
 //The update function of the magic orb
-void MagicOrb::Update(sf::Time dt)
+void MagicOrb::Update(double dt)
 {
 	//If the orb is alive
 	if (alive)
 	{
 		//Get the time between the last frame and the current frame
-		float time = dt.asSeconds();
+		float time = dt;
 
 		//Rotate the sprite
-		orbSprite.rotate(180.0f * time);
+		orbSprite.Rotate(180.0f * time);
 
 		//Move the sprite in the travel direction
-		orbSprite.move({direction.x * TRAVEL_SPEED * time,direction.y * TRAVEL_SPEED * time});
+		orbSprite.Move({direction.x * TRAVEL_SPEED * time,direction.y * TRAVEL_SPEED * time});
 
 		//Increase the lifetime counter
 		lifeTimeCounter += time;

@@ -1,15 +1,17 @@
 #include <DungeonEscape/GameManager.h> //Contains the GameManager class, which contains the main logic of the game
 #include <DungeonEscape/Common.h> //Contains many common game functions and variables
 #include <DungeonEscape/ThreadPool.h> //Contains the thread pool for running code asynchronously
+#include <smk/Input.hpp>
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 
 //The Update function that is called when the GameState is set to MainMenu
 void GameManager::MenuUpdate()
 {
+	
 	//If the enter key has been pressed
-	if (Common::MainWindow.hasFocus() && Keyboard::isKeyPressed(sf::Keyboard::Enter))
+	if (Common::MainWindow->input().IsKeyPressed(GLFW_KEY_ENTER))
 	{
 		//Destroy the title text
 		TitleText = nullptr;
@@ -35,7 +37,7 @@ void GameManager::StoryUpdate()
 	if (enterHeld)
 	{
 		//Wait until it is released
-		if (Common::MainWindow.hasFocus() && !Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		if (!Common::MainWindow->input().IsKeyPressed(GLFW_KEY_ENTER))
 		{
 			enterHeld = false;
 		}
@@ -44,7 +46,7 @@ void GameManager::StoryUpdate()
 	else
 	{
 		//Wait until the enter key is pressed again
-		if (Common::MainWindow.hasFocus() && Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		if (Common::MainWindow->input().IsKeyPressed(GLFW_KEY_ENTER))
 		{
 			//Enter is now being held down
 			enterHeld = true;
@@ -72,7 +74,7 @@ void GameManager::InstructionUpdate()
 	if (enterHeld)
 	{
 		//Wait until it is released
-		if (Common::MainWindow.hasFocus() && !Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		if (!Common::MainWindow->input().IsKeyPressed(GLFW_KEY_ENTER))
 		{
 			enterHeld = false;
 		}
@@ -81,7 +83,7 @@ void GameManager::InstructionUpdate()
 	else
 	{
 		//Wait until the enter key is pressed again
-		if (Common::MainWindow.hasFocus() && Keyboard::isKeyPressed(sf::Keyboard::Enter))
+		if (Common::MainWindow->input().IsKeyPressed(GLFW_KEY_ENTER))
 		{
 			//Go to the game state
 			currentState = GameState::Game;
@@ -97,7 +99,9 @@ void GameManager::InstructionUpdate()
 			map = make_unique<WorldMap>();
 
 			//Start generating the world
-			map->GenerateAsync(20);
+			//map->GenerateAsync(20);
+			map->GenerateAsync(3);
+			//map->Generate(3);
 		}
 	}
 }
@@ -154,7 +158,7 @@ void GameManager::GameUpdate()
 void GameManager::EndUpdate()
 {
 	//If the enter key is pressed
-	if (Common::MainWindow.hasFocus() && Keyboard::isKeyPressed(sf::Keyboard::Enter))
+	if (Common::MainWindow->input().IsKeyPressed(GLFW_KEY_ENTER))
 	{
 		//End the game
 		End();
@@ -202,6 +206,8 @@ void GameManager::EndTheGame()
 {
 	//Tell the game manager to end the game
 	endingGame = true;
+
+	End();
 }
 
 //Called to start the GameManager
@@ -248,7 +254,7 @@ bool GameManager::IsComplete() const
 }
 
 //The update function that is called each frame
-void GameManager::Update(sf::Time dt)
+void GameManager::Update(double dt)
 {
 	switch (currentState)
 	{

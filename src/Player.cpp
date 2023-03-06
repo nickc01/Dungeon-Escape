@@ -3,10 +3,11 @@
 #include <DungeonEscape/Math.h> //Contains many commonly used math functions
 #include <DungeonEscape/MagicOrb.h> //Contains the MagicOrb class for shooting magic orbs
 #include <DungeonEscape/Door.h> //Contains the Door class, which is where the player enters to win the game
+#include <smk/Input.hpp>
 
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 
 namespace
 {
@@ -16,7 +17,7 @@ namespace
 }
 
 
-ResourceTexture Player::playerSpriteSheet{RES_PLAYERMAGESHEET}; //The texture resource for the player
+ResourceTexture Player::playerSpriteSheet; //The texture resource for the player
 Player* Player::currentPlayer = nullptr; //The singleton object for the player class
 
 //Updates the player sprite
@@ -54,11 +55,16 @@ Player* Player::GetCurrentPlayer()
 }
 
 //Constructs a new player
-Player::Player(const WorldMap& map, sf::Vector2f spawnPoint) :
+Player::Player(const WorldMap& map, Vector2f spawnPoint) :
 	AnimatedEntity(map,true,1.0f / 12.0f)
 {
 	//Sets the current player in the game
 	currentPlayer = this;
+
+	if (!playerSpriteSheet.Loaded())
+	{
+		playerSpriteSheet = ResourceTexture{ RES_PLAYERMAGESHEET };
+	}
 
 	//Add all the sprites to the animation lists
 	EmplaceSprite("DOWN",playerSpriteSheet.GetTexture(), IntRect(0, 0, 8, 8));
@@ -82,19 +88,19 @@ Player::Player(const WorldMap& map, sf::Vector2f spawnPoint) :
 
 
 	//Get the texture rect of the player sprite
-	auto rect = GetSprite()->getTextureRect();
+	//auto rect = GetSprite()->getTextureRect();
 
 	//Set the render layer
 	SetRenderLayer(10);
 
 	//Set the player's position to the spawnpoint
-	GetSprite()->setPosition(spawnPoint);
+	GetSprite()->SetPosition(spawnPoint);
 
 	//Set the player's origin to the center of the texture
-	GetSprite()->setOrigin(rect.width / 2.0f, rect.height / 2.0f);
+	GetSprite()->SetCenter(GetSprite()->texture().width() / 2.0f, GetSprite()->texture().height() / 2.0f);
 
 	//Set the camera to where the player is at
-	MoveCameraTo(GetSprite()->getPosition());
+	MoveCameraTo(GetSprite()->position());
 
 	//Enable updating
 	UpdateReceiver::SetActive(true);
@@ -145,7 +151,7 @@ void Player::TakeHit()
 		//Set the flicker timer
 		flickerTimer = FLICKER_RATE;
 		//Set the sprite color to redish
-		GetSprite()->setColor(Color(255,128,128));
+		GetSprite()->SetColor(glm::vec4(255,128,128,255));
 	}
 }
 
@@ -162,7 +168,7 @@ bool Player::ReachedTheDoor() const
 }
 
 //The update loop of the player
-void Player::Update(sf::Time dt)
+void Player::Update(double dt)
 {
 	//If the player is not alive or it has reach the door already
 	if (!IsAlive() || reachedDoor)
@@ -171,10 +177,10 @@ void Player::Update(sf::Time dt)
 		return;
 	}
 	//Get the time between this frame and the last
-	auto time = dt.asSeconds();
+	auto time = dt;
 
 	//Get the player's position
-	auto playerPosition = GetSprite()->getPosition();
+	auto playerPosition = GetSprite()->position();
 
 	//If the player is invincible
 	if (invincible)
@@ -189,13 +195,13 @@ void Player::Update(sf::Time dt)
 			//Reset the flicker timer
 			flickerTimer += FLICKER_RATE;
 			//Get the color of the player
-			auto spriteColor = GetSprite()->getColor();
+			auto spriteColor = GetSprite()->color();
 
 			//Invert the transparency of the player
 			spriteColor.a = 255 - spriteColor.a;
 
 			//Set the sprite's new color
-			GetSprite()->setColor(spriteColor);
+			GetSprite()->SetColor(spriteColor);
 		}
 
 		//If the invincibility timer is zero0
@@ -208,7 +214,7 @@ void Player::Update(sf::Time dt)
 			invincible = false;
 
 			//Reset the player's color
-			GetSprite()->setColor(Color(255,255,255));
+			GetSprite()->SetColor(glm::vec4(255,255,255,255));
 		}
 	}
 
@@ -220,9 +226,8 @@ void Player::Update(sf::Time dt)
 
 	//Stores whether the player is moving or not
 	bool isMoving = false;
-
 	//If the Up or W keys are pressed
-	if (Common::MainWindow.hasFocus() && (Keyboard::isKeyPressed(Keyboard::Key::Up) || Keyboard::isKeyPressed(Keyboard::Key::W)))
+	if (Common::MainWindow->input().IsKeyHold(GLFW_KEY_UP) || Common::MainWindow->input().IsKeyHold(GLFW_KEY_W))
 	{
 		//Move the player up
 		Move(0.0f,-60.0f * time);
@@ -232,7 +237,7 @@ void Player::Update(sf::Time dt)
 		isMoving = true;
 	}
 	//If the Down or S keys are pressed
-	if (Common::MainWindow.hasFocus() && (Keyboard::isKeyPressed(Keyboard::Key::Down) || Keyboard::isKeyPressed(Keyboard::Key::S)))
+	if (Common::MainWindow->input().IsKeyHold(GLFW_KEY_DOWN) || Common::MainWindow->input().IsKeyHold(GLFW_KEY_S))
 	{
 		//Move the player down
 		Move(0.0f, 60.0f * time);
@@ -242,7 +247,7 @@ void Player::Update(sf::Time dt)
 		isMoving = true;
 	}
 	//If the Right or D keys are pressed
-	if (Common::MainWindow.hasFocus() && (Keyboard::isKeyPressed(Keyboard::Key::Right) || Keyboard::isKeyPressed(Keyboard::Key::D)))
+	if (Common::MainWindow->input().IsKeyHold(GLFW_KEY_RIGHT) || Common::MainWindow->input().IsKeyHold(GLFW_KEY_D))
 	{
 		//Move the player right
 		Move(60.0f * time, 0.0f);
@@ -252,7 +257,7 @@ void Player::Update(sf::Time dt)
 		isMoving = true;
 	}
 	//If the Left or A keys are pressed
-	if (Common::MainWindow.hasFocus() && (Keyboard::isKeyPressed(Keyboard::Key::Left) || Keyboard::isKeyPressed(Keyboard::Key::A)))
+	if (Common::MainWindow->input().IsKeyHold(GLFW_KEY_LEFT) || Common::MainWindow->input().IsKeyHold(GLFW_KEY_A))
 	{
 		//Move the player left
 		Move(-60.0f * time, 0.0f);
@@ -266,21 +271,21 @@ void Player::Update(sf::Time dt)
 	if (orbSpawnTimer <= 0.0f)
 	{
 		//If the left mouse button is pressed
-		if (Common::MainWindow.hasFocus() && Mouse::isButtonPressed(Mouse::Left))
+		if (Common::MainWindow->input().IsMouseHeld(GLFW_MOUSE_BUTTON_1))
 		{
 			//Reset the orb spawn timer
 			orbSpawnTimer = ORB_SPAWN_RATE;
 
 			//Spawn an orb at the player's position, and moving towards where the mouse was clicked
-			MagicOrb::Fire(GetMap(), GetSprite()->getPosition(), Common::GetMouseWorldCoordinates() - GetSprite()->getPosition());
+			MagicOrb::Fire(GetMap(), GetSprite()->position(), Common::GetMouseWorldCoordinates() - GetSprite()->position());
 		}
 		//If the space bar is pressed
-		else if (Common::MainWindow.hasFocus() && Keyboard::isKeyPressed(Keyboard::Key::Space))
+		else if (Common::MainWindow->input().IsKeyHold(GLFW_KEY_SPACE))
 		{
 			//Reset the orb spawn timer
 			orbSpawnTimer = ORB_SPAWN_RATE;
 			//Spawn an orb at the player's position, and moving towards where the player is looking
-			MagicOrb::Fire(GetMap(), GetSprite()->getPosition(), travelDirection);
+			MagicOrb::Fire(GetMap(), GetSprite()->position(), travelDirection);
 		}
 	}
 	//If the orb spawn timer is not zero

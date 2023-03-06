@@ -7,12 +7,14 @@ class GameText : public Renderable
 {
 	static ResourceFont mainGameFont; //The main game font resource
 
+	ResourceFont loadedFont;
+
 	smk::Text text; //The text object
 
 public:
 
 	//Constructs a new GameText object
-	GameText(const std::string text, Vector2f position, unsigned int characterSize = 300u, Vector2f scale = Vector2f(0.1f,0.1f));
+	GameText(const std::string text, Vector2f position, float line_height = 175.0f, Vector2f scale = Vector2f(0.1f,0.1f));
 
 	//Get the text object stored in the GameText object
 	smk::Text& GetText();

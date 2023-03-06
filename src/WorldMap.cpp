@@ -4,7 +4,7 @@
 #include <DungeonEscape/Math.h> //Contains many commonly used math functions
 
 
-using namespace sf; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 using namespace std; //Prevents me from having to type std everywhere
 
 namespace
@@ -130,15 +130,16 @@ void WorldMap::Flatten()
 
 				//Get the tile at the specified position
 				auto& tile = room->GetTile(relativePos);
-
 				//Get and store the size of the tile
-				tileSize = tile->GetSprite().getTexture()->getSize();
+				tileSize = Vector2i(tile->GetSprite().texture().width(), tile->GetSprite().texture().height());
+
+				//tile->GetSprite().texture()
 
 				//Get the world space position of the tile
-				Vector2<float> tilePosition = Vector2<float>(static_cast<float>(layerPos.x * tileSize.x), static_cast<float>(layerPos.y * tileSize.y));
+				auto tilePosition = Vector2f(static_cast<float>(layerPos.x * tileSize.x), static_cast<float>(layerPos.y * tileSize.y));
 
 				//Set the tile's world space position
-				tile->GetSprite().setPosition(tilePosition);
+				tile->GetSprite().SetPosition(tilePosition);
 
 				//Add the tile to the tile grid
 				tiles[layerPos] = tile;
@@ -172,16 +173,16 @@ void WorldMap::Flatten()
 		for (auto tile : branch->GetTiles())
 		{
 			//Get the map map coordinates of the tile
-			Vector2<int> layerPos = Vector2<int>(tile->GetSprite().getPosition()) - BottomLeft;
+			Vector2<int> layerPos = Vector2<int>(tile->GetSprite().position()) - BottomLeft;
 
 			//Get the size of the tile texture
-			auto textureSize = tile->GetSprite().getTexture()->getSize();
+			auto textureSize = Vector2i(tile->GetSprite().texture().width(), tile->GetSprite().texture().height());
 
 			//Get the world space coordinates of the tile
 			Vector2<float> tilePosition = Vector2<float>(static_cast<float>(layerPos.x * textureSize.x), static_cast<float>(layerPos.y * textureSize.y));
 
 			//Set the world space position of the tile
-			tile->GetSprite().setPosition(tilePosition);
+			tile->GetSprite().SetPosition(tilePosition);
 
 			//Add the tile to the 2D grid
 			tiles[layerPos] = tile;
@@ -250,7 +251,7 @@ int WorldMap::GetHeight() const
 }
 
 //Gets the size of each tile in the map
-sf::Vector2u WorldMap::GetTileSize() const
+Vector2u WorldMap::GetTileSize() const
 {
 	return tileSize;
 }
@@ -262,41 +263,42 @@ Vector2<int> WorldMap::GetSpawnPoint() const
 }
 
 //Gets all the enemy spawnpoints in the map
-const std::vector<sf::Vector2f>& WorldMap::GetEnemySpawnPoints() const
+const std::vector<Vector2f>& WorldMap::GetEnemySpawnPoints() const
 {
 	return enemySpawnPoints;
 }
 
 //Gets all the enemy spawnpoints in the map
-std::vector<sf::Vector2f>& WorldMap::GetEnemySpawnPoints()
+std::vector<Vector2f>& WorldMap::GetEnemySpawnPoints()
 {
 	return enemySpawnPoints;
 }
 
 //Gets the location of the exit door
-sf::Vector2f WorldMap::GetDoorLocation() const
+Vector2f WorldMap::GetDoorLocation() const
 {
 	return doorLocation;
 }
 
 //Draws the world map to the screen
-void WorldMap::Render(RenderWindow& window)
+void WorldMap::Render(Window& window)
 {
+
 	//Get the currently set render view of the window
-	auto view = window.getView();
+	auto view = window.view();
 
 	//Get the center of the view
-	auto viewCenter = view.getCenter();
+	auto viewCenter = view.center();
 
 	//Get the size of the view
-	auto viewSize = view.getSize();
+	auto viewSize = view.size();
 	
 	//Get the rect bounds that encompasses the entire viewing area
 	auto viewRect = Rect<int>(viewCenter.x - (viewSize.x / 2.0f), viewCenter.y + (viewSize.y / 2.0f), viewSize.x, viewSize.y);
 
 
 	//Get the size of the textures used in the map
-	Vector2i textureSize = static_cast<Vector2i>(Common::Textures::centerPiece1.GetTexture().getSize());
+	Vector2i textureSize = Vector2i(Common::Textures::centerPiece1.GetTexture().width(), Common::Textures::centerPiece1.GetTexture().height());
 
 	//Convert the viewing rect into map coordinates
 	auto mapView = Rect<int>(viewRect.left / textureSize.x, viewRect.top / textureSize.y, viewRect.width / textureSize.x, viewRect.height / textureSize.y);
@@ -321,7 +323,7 @@ void WorldMap::Render(RenderWindow& window)
 				if (tile != nullptr)
 				{
 					//Draw it to the screen
-					window.draw(tiles[{x, y}]->GetSprite());
+					window.Draw(tiles[{x, y}]->GetSprite());
 				}
 			}
 		}
@@ -389,7 +391,7 @@ BackgroundTile* WorldMap::operator[](Vector2<int> position) const
 }
 
 //Retrieves all the tiles that are wintin the specified rectangle
-Array2D<BackgroundTile*> WorldMap::GetTilesWithinRect(sf::FloatRect rect) const
+Array2D<BackgroundTile*> WorldMap::GetTilesWithinRect(FloatRect rect) const
 {
 	//Convert the rect to map coordinates
 	Rect<int> area = Rect<int>(floorf(rect.left) / tileSize.x ,ceilf(rect.top) / tileSize.y,ceilf(rect.width) / tileSize.x,ceilf(rect.height) / tileSize.y );

@@ -42,6 +42,10 @@ public:
     ////////////////////////////////////////////////////////////
     Rect(const Vector2<T>& position, const Vector2<T>& size);
 
+
+
+    Rect(smk::Rectangle rectangle) : left(rectangle.left), top(rectangle.top), width(rectangle.width()), height(rectangle.height()) {}
+
     ////////////////////////////////////////////////////////////
     /// \brief Construct the rectangle from another type of rectangle
     ///
@@ -115,6 +119,11 @@ public:
     ////////////////////////////////////////////////////////////
     bool intersects(const Rect<T>& rectangle, Rect<T>& intersection) const;
 
+    /*Rect<T> operator glm::vec<4, T>() const
+    {
+
+    }*/
+
     operator smk::Rectangle() const
     {
         auto rect = smk::Rectangle{};
@@ -122,6 +131,7 @@ public:
         rect.top = top;
         rect.bottom = top - height;
         rect.right = left + width;
+        return rect;
     }
 
     ////////////////////////////////////////////////////////////
@@ -189,10 +199,10 @@ Rect<T>::Rect(T rectLeft, T rectTop, T rectWidth, T rectHeight) :
 ////////////////////////////////////////////////////////////
 template <typename T>
 Rect<T>::Rect(const Vector2<T>& position, const Vector2<T>& size) :
-    left(std::get<0>(position)),
-    top(std::get<1>(position)),
-    width(std::get<0>(size)),
-    height(std::get<1>(size))
+    left(position.x),
+    top(position.y),
+    width(size.x),
+    height(size.y)
 {
 
 }
@@ -230,7 +240,7 @@ bool Rect<T>::contains(T x, T y) const
 template <typename T>
 bool Rect<T>::contains(const Vector2<T>& point) const
 {
-    return contains(std::get<0>(point), std::get<1>(point));
+    return contains(point.x, point.y);
 }
 
 
@@ -296,6 +306,12 @@ inline bool operator !=(const Rect<T>& left, const Rect<T>& right)
 {
     return !(left == right);
 }
+
+/*template<typename T>
+Rect<T> operator glm::vec<4, T> () const
+{
+     
+}*/
 
 // Create typedefs for the most common types
 using IntRect = Rect<int>;

@@ -67,7 +67,7 @@ void AnimatedEntity::EmplaceSprite(std::string group, smk::Texture& texture, Rec
 	smk::Sprite sprite = smk::Sprite(texture, rect);
 
 	//Set the sprite's scale
-	sprite.SetScale(std::get<0>(scale), std::get<1>(scale));
+	sprite.SetScale(scale.x, scale.y);
 
 	//Add the sprite to the back of the sprite list
 	vector.push_back(sprite);

@@ -68,8 +68,8 @@ public:
 	//Sets the positional offset of the 2D array
 	void SetOffset(Vector2<int> offset)
 	{
-		offsetX = std::get<0>(offset);
-		offsetY = std::get<1>(offset);
+		offsetX = offset.x;
+		offsetY = offset.y;
 	}
 
 	//Check if the specified index is within the bounds of the array
@@ -129,19 +129,19 @@ public:
 	//Sets an object at the specified index
 	void Set(ElementType element, Vector2<int> position)
 	{
-		Set(element, std::get<0>(position), std::get<1>(position));
+		Set(element, position.x, position.y);
 	}
 
 	//Gets an object at the specified index
 	const ElementType& operator[](Vector2<int> position) const
 	{
-		return Get(std::get<0>(position), std::get<1>(position));
+		return Get(position.x, position.y);
 	}
 
 	//Gets an object at the specified index
 	ElementType& operator[](Vector2<int> position)
 	{
-		return Get(std::get<0>(position), std::get<1>(position));
+		return Get(position.x, position.y);
 	}
 };
 

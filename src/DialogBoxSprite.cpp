@@ -1,16 +1,22 @@
 #include <DungeonEscape/DialogBoxSprite.h> //Contains the DialogBoxSprite class, which is used to display a dialog box to the screen
 
-using namespace smk; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 using namespace std; //Prevents me from having to type std everywhere
 
 //Loads the resource texture
-ResourceTexture DialogBoxSprite::dialogBoxTexture{ RES_DIALOGBOX };
+ResourceTexture DialogBoxSprite::dialogBoxTexture;
 
 //Constructs a new dialog box
-DialogBoxSprite::DialogBoxSprite() :
-	//Creates the dialog box sprite with the loaded texture
-	dialogBoxSprite(dialogBoxTexture.GetTexture())
+DialogBoxSprite::DialogBoxSprite()
 {
+	if (!dialogBoxTexture.Loaded())
+	{
+		dialogBoxTexture = ResourceTexture{ RES_DIALOGBOX };
+	}
+
+	//Creates the dialog box sprite with the loaded texture
+	dialogBoxSprite = smk::Sprite(dialogBoxTexture.GetTexture());
+
 	//Gets the texture rect of the sprite
 	//auto textureRect = dialogBoxSprite.getTextureRect();
 	auto textureWidth = dialogBoxSprite.texture().width();
@@ -39,7 +45,7 @@ void DialogBoxSprite::Render(smk::Window& window)
 	//auto newView = View({ 0.0f,0.0f }, Vector2f(std::get<0>(windowSize) / 3u, windowSize.y / 3u));
 	auto newView = View(oldView);
 	newView.SetCenter(0, 0);
-	newView.SetSize(std::get<0>(windowSize) / 3, std::get<1>(windowSize) / 3);
+	newView.SetSize(windowSize.x / 3, windowSize.y / 3);
 
 	//Update the windows's view
 	window.SetView(newView);

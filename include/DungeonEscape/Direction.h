@@ -77,25 +77,25 @@ Direction DirectionFromVector(Vector2<VectorType> vector)
 	constexpr VectorType zero = static_cast<VectorType>(0);
 
 	//If the vector is pointing up
-	if (std::get<0>(vector) == zero && std::get<1>(vector) > zero)
+	if (vector.x == zero && vector.y > zero)
 	{
 		//Return the Up Direction
 		return Direction::Up;
 	}
 	//If the vector is pointing down
-	else if (std::get<0>(vector) == zero && std::get<1>(vector) < zero)
+	else if (vector.x == zero && vector.y < zero)
 	{
 		//Return the Down Direction
 		return Direction::Down;
 	}
 	//If the vector is pointing right
-	else if (std::get<0>(vector) > zero && std::get<1>(vector) == zero)
+	else if (vector.x > zero && vector.y == zero)
 	{
 		//Return the Right Direction
 		return Direction::Right;
 	}
 	//If the vector is pointing left
-	else if (std::get<0>(vector) < zero && std::get<1>(vector) == zero)
+	else if (vector.x < zero && vector.y == zero)
 	{
 		//Return the Left Direction
 		return Direction::Left;

@@ -3,16 +3,16 @@
 #include <DungeonEscape/Math.h> //Contains many commonly used math functions
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace sf; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 
 //Draws the entity to the screen
-void Entity::Render(sf::RenderWindow& window)
+void Entity::Render(smk::Window& window)
 {
 	//If a sprite is specified
 	if (sprite != nullptr)
 	{
 		//Draw the sprite
-		window.draw(*sprite);
+		window.Draw(*sprite);
 	}
 }
 
@@ -27,15 +27,15 @@ Array2D<BackgroundTile*> Entity::GetTilesAroundEntity() const
 	}
 
 	//Get the position of the sprite
-	auto position = sprite->getPosition();
+	auto position = sprite->position();
 
 	//Get the global bounds of the sprite
 	auto entityBounds = sprite->getGlobalBounds();
 
 	//Get the width of the bounds
-	auto width = entityBounds.width;
+	auto width = entityBounds.width();
 	//Get the height of the bounds
-	auto height = entityBounds.height;
+	auto height = entityBounds.height();
 
 	//Get the rightmost side of the bounds
 	auto right = entityBounds.left + width;
@@ -64,7 +64,7 @@ Entity::Entity(const WorldMap& map, bool collisionEnabled) :
 }
 
 //Constructs a new entity with the specified sprite
-Entity::Entity(const WorldMap& map, sf::Sprite* sprite,bool collisionEnabled) :
+Entity::Entity(const WorldMap& map, smk::Sprite* sprite,bool collisionEnabled) :
 	map(map),
 	collisionEnabled(collisionEnabled),
 	sprite(sprite)
@@ -73,19 +73,19 @@ Entity::Entity(const WorldMap& map, sf::Sprite* sprite,bool collisionEnabled) :
 }
 
 //Gets the currently set sprite
-sf::Sprite* Entity::GetSprite()
+smk::Sprite* Entity::GetSprite()
 {
 	return sprite;
 }
 
 //Gets the currently set sprite
-const sf::Sprite* Entity::GetSprite() const
+const smk::Sprite* Entity::GetSprite() const
 {
 	return sprite;
 }
 
 //Sets the entity's sprite
-void Entity::SetSprite(sf::Sprite* newSprite)
+void Entity::SetSprite(smk::Sprite* newSprite)
 {
 	//If the sprite is the same as the old sprite
 	if (sprite == newSprite)
@@ -103,11 +103,11 @@ void Entity::SetSprite(sf::Sprite* newSprite)
 	else
 	{
 		//Get the necessary information on the old sprite
-		auto previousPosition = sprite->getPosition();
-		auto previousScale = sprite->getScale();
-		auto previousOrigin = sprite->getOrigin();
-		auto previousRotation = sprite->getRotation();
-		auto previousColor = sprite->getColor();
+		auto previousPosition = sprite->position();
+		auto previousScale = sprite->scale();
+		auto previousOrigin = sprite->center();
+		auto previousRotation = sprite->rotation();
+		auto previousColor = sprite->color();
 
 		//Update the sprite
 		sprite = newSprite;
@@ -116,11 +116,11 @@ void Entity::SetSprite(sf::Sprite* newSprite)
 		if (sprite != nullptr)
 		{
 			//Set the sprite's information to the old sprite information
-			sprite->setPosition(previousPosition);
-			sprite->setScale(previousScale);
-			sprite->setOrigin(previousOrigin);
-			sprite->setRotation(previousRotation);
-			sprite->setColor(previousColor);
+			sprite->SetPosition(previousPosition);
+			sprite->SetScale(previousScale);
+			sprite->SetCenter(previousOrigin);
+			sprite->SetRotation(previousRotation);
+			sprite->SetColor(previousColor);
 		}
 	}
 }
@@ -138,11 +138,12 @@ void Entity::SetCollisionMode(bool enabled)
 }
 
 //Gets the hitbox of the entity
-sf::Rect<float> Entity::GetHitBox() const
+Rect<float> Entity::GetHitBox() const
 {
 	//If no hitbox has been specified and a sprite is already set
-	if (hitbox == sf::FloatRect(0.0f,0.0f,0.0f,0.0f) && sprite != nullptr)
+	if (hitbox == FloatRect(0.0f,0.0f,0.0f,0.0f) && sprite != nullptr)
 	{
+		auto test = sprite->getLocalBounds();
 		//Use the texture bounds instead
 		return sprite->getLocalBounds();
 	}
@@ -150,12 +151,12 @@ sf::Rect<float> Entity::GetHitBox() const
 }
 
 //Gets the hitbox of the entity in global coordinates
-sf::Rect<float> Entity::GetHitBoxGlobalBounds() const
+Rect<float> Entity::GetHitBoxGlobalBounds() const
 {
 	//Get the origin of the sprite
-	auto origin = sprite->getOrigin();
+	auto origin = sprite->center();
 	//Get the position of the sprite
-	auto position = sprite->getPosition();
+	auto position = sprite->position();
 
 	//Get the hitbox bounds
 	auto bounds = GetHitBox();
@@ -170,7 +171,7 @@ sf::Rect<float> Entity::GetHitBoxGlobalBounds() const
 }
 
 //Sets the entity's hitbox
-void Entity::SetHitbox(sf::Rect<float> hitbox)
+void Entity::SetHitbox(Rect<float> hitbox)
 {
 	this->hitbox = hitbox;
 }
@@ -183,7 +184,7 @@ void Entity::Move(float x, float y)
 
 //Moves the sprite in the specified direction
 //NOTE : IN SFML, down mean we move up towards the bottom of the screen, and down means we move towards the top of the screen
-void Entity::Move(sf::Vector2f direction)
+void Entity::Move(Vector2f direction)
 {
 	//If no sprite has been configured
 	if (sprite == nullptr)
@@ -252,7 +253,7 @@ void Entity::Move(sf::Vector2f direction)
 	}
 
 	//Move the sprite in the specified direction
-	sprite->move(direction);
+	sprite->Move(direction);
 }
 
 //Moves the sprite in the specified direction
@@ -269,11 +270,11 @@ float Entity::GetDistanceToWall(Direction direction) const
 	{
 		return INFINITY;
 	}
-	return GetDistanceToWall(direction, { 0.0f, static_cast<float>(sprite->getTextureRect().height * 2) } );
+	return GetDistanceToWall(direction, { 0.0f, static_cast<float>(sprite->texture().height() * 2) } );
 }
 
 //Gets the distance to the nearest wall in the specified direction, with the applied offset to the sprite
-float Entity::GetDistanceToWall(Direction direction, sf::Vector2f offset) const
+float Entity::GetDistanceToWall(Direction direction, Vector2f offset) const
 {
 	auto tiles = GetTilesAroundEntity();
 	return GetDistanceToWall(tiles, direction, offset);
@@ -287,7 +288,7 @@ float Entity::GetDistanceToWall(Array2D<BackgroundTile*>& tiles, Direction direc
 	{
 		return INFINITY;
 	}
-	return GetDistanceToWall(tiles, direction, { 0.0f, static_cast<float>(sprite->getTextureRect().height * 2) });
+	return GetDistanceToWall(tiles, direction, { 0.0f, static_cast<float>(sprite->texture().height() * 2) });
 }
 
 //Gets the distance to the nearest wall in the specified direction, with the specified tiles to take into account and with the applied offset to the sprite
@@ -484,16 +485,16 @@ bool Entity::IsTouchingWall(Vector2f offset) const
 //Moves the camera to the specified position.
 //If the lerp amount is less than one, then that determines the percentage on how far the camera should move towards the new position.
 //For example if the lerp is 0.5f or 50%, then the camera will move 50% the distance between the old position and the new position
-void Entity::MoveCameraTo(sf::Vector2f position, float lerpAmount)
+void Entity::MoveCameraTo(Vector2f position, float lerpAmount)
 {
 	//Get the current camera view
-	sf::View cameraView = Common::MainWindow.getView();
+	smk::View cameraView = Common::MainWindow->view();
 
 	//Linearly interpolate to the new position by the lerp amount
-	cameraView.setCenter(Math::VectorLerp(cameraView.getCenter(), position, lerpAmount));
+	cameraView.SetCenter(Math::VectorLerp(Vector2f(cameraView.x_,cameraView.y_), position, lerpAmount));
 
 	//Set the new view
-	Common::MainWindow.setView(cameraView);
+	Common::MainWindow->SetView(cameraView);
 }
 
 //Gets the world map the entity is living in

@@ -1,10 +1,10 @@
 #include <DungeonEscape/Math.h> //Contains many commonly used math functions
 
 //Determines if two sprites interect
-bool Math::SpritesIntersect(const sf::Sprite& A, const sf::Sprite& B)
+bool Math::SpritesIntersect(const smk::Sprite& A, const smk::Sprite& B)
 {
 	//Get the bounds of each of the sprites and see if they intersect
-	return RectsIntersect(A.getGlobalBounds(), B.getGlobalBounds());
+	return RectsIntersect(FloatRect(A.getGlobalBounds()), FloatRect(B.getGlobalBounds()));
 }
 
 //Determines if two entities intersect

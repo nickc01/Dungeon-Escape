@@ -59,7 +59,7 @@ namespace Common
 	}
 
 	//The main render window the game will take place in
-	extern smk::Window MainWindow;
+	extern std::shared_ptr<smk::Window> MainWindow;
 
 	//Creates all the common sprites used in the game
 	void CreateSprites();
@@ -83,12 +83,12 @@ namespace Common
 	bool SpritesIntersect(const smk::Sprite& A, const smk::Sprite& B, bool scaleByTextureSize);
 
 	//Refreshes the size of the window. This is normally used when the window gets resized
-	void RefreshWindow(smk::Window& window = Common::MainWindow);
+	void RefreshWindow(std::shared_ptr<smk::Window>& window = Common::MainWindow);
 	//Gets the mouse position in world coordinates
-	Vector2f GetMouseWorldCoordinates(smk::Window& window = Common::MainWindow);
+	Vector2f GetMouseWorldCoordinates(std::shared_ptr<smk::Window>& window = Common::MainWindow);
 
 	//Centers the camera over a specified point
-	void CenterCamera(Vector2f center, smk::Window& window = Common::MainWindow);
+	void CenterCamera(Vector2f center, std::shared_ptr<smk::Window>& window = Common::MainWindow);
 
 	//Gets a random number between the minRange (inclusive) and the maxRange (exclusive)
 	int RandomNumber(int minRange, int maxRange);

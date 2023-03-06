@@ -9,9 +9,11 @@
 class ResourceTexture
 {
 	//The resource to load
-	smk::FileInputStream texture_file;
+	//smk::FileInputStream texture_file;
 
 	smk::Texture texture; //The loaded Texture
+
+	bool _loaded = false;
 
 public:
 
@@ -28,5 +30,7 @@ public:
 
 	//Gets the texture that was loaded
 	smk::Texture& GetTexture();
+
+	bool Loaded() const;
 };
 

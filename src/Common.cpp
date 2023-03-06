@@ -9,7 +9,7 @@
 #include <smk/Input.hpp>
 
 using namespace std; //Prevents me from having to type std everywhere
-using namespace smk; //Prevents me from having to type sf everywhere
+using namespace smk; //Prevents me from having to type smk everywhere
 
 namespace
 {
@@ -22,7 +22,7 @@ namespace
         sprite.SetPosition({0,0});
         //Set the sprite's origin
         //sprite.SetOrigin(origin);
-        sprite.SetCenter(std::get<0>(origin),std::get<1>(origin));
+        sprite.SetCenter(origin.x,origin.y);
         //Return the sprite
         return sprite;
     }
@@ -74,26 +74,26 @@ namespace Common
         //A list of all common textures used for both the rooms and the branches
         //These are then used by the Common Sprites
 
-        ResourceTexture centerPiece1{RES_CENTERPIECE1};
-        ResourceTexture centerPiece2{RES_CENTERPIECE2};
+        ResourceTexture centerPiece1;
+        ResourceTexture centerPiece2;
 
-        ResourceTexture topJointPiece{RES_TOPJOINT};
-        ResourceTexture bottomJointPiece{RES_BOTTOMJOINT};
-        ResourceTexture leftJointPiece{RES_LEFTJOINT};
-        ResourceTexture rightJointPiece{RES_RIGHTJOINT};
+        ResourceTexture topJointPiece;
+        ResourceTexture bottomJointPiece;
+        ResourceTexture leftJointPiece;
+        ResourceTexture rightJointPiece;
 
-        ResourceTexture topLeftPiece{RES_TOPLEFTPIECE};
-        ResourceTexture topRightPiece{RES_TOPRIGHTPIECE};
-        ResourceTexture bottomLeftPiece{RES_BOTTOMLEFTPIECE};
-        ResourceTexture bottomRightPiece{RES_BOTTOMRIGHTPIECE};
-        ResourceTexture topPiece{RES_TOPPIECE};
-        ResourceTexture bottomPiece{RES_BOTTOMPIECE};
-        ResourceTexture rightPiece{RES_RIGHTPIECE};
-        ResourceTexture leftPiece{RES_LEFTPIECE};
+        ResourceTexture topLeftPiece;
+        ResourceTexture topRightPiece;
+        ResourceTexture bottomLeftPiece;
+        ResourceTexture bottomRightPiece;
+        ResourceTexture topPiece;
+        ResourceTexture bottomPiece;
+        ResourceTexture rightPiece;
+        ResourceTexture leftPiece;
     }
 
     //The main render window the game will take place in
-    Window MainWindow(800, 600, "Dungeon Escape");
+    std::shared_ptr<Window> MainWindow = nullptr;
 }
 
 
@@ -103,6 +103,26 @@ using namespace Common::Textures; //Prevents me from having to type Common::Text
 //Creates all the common sprites used in the game
 void Common::CreateSprites()
 {
+
+    MainWindow = std::make_shared<Window>(800, 600, "Dungeon Escape");
+
+    centerPiece1 = ResourceTexture{ RES_CENTERPIECE1 };
+    centerPiece2 = ResourceTexture{ RES_CENTERPIECE2 };
+
+    topJointPiece = ResourceTexture{ RES_TOPJOINT };
+    bottomJointPiece = ResourceTexture{ RES_BOTTOMJOINT };
+    leftJointPiece = ResourceTexture{ RES_LEFTJOINT };
+    rightJointPiece = ResourceTexture{ RES_RIGHTJOINT };
+
+    topLeftPiece = ResourceTexture{ RES_TOPLEFTPIECE };
+    topRightPiece = ResourceTexture{ RES_TOPRIGHTPIECE };
+    bottomLeftPiece = ResourceTexture{ RES_BOTTOMLEFTPIECE };
+    bottomRightPiece = ResourceTexture{ RES_BOTTOMRIGHTPIECE };
+    topPiece = ResourceTexture{ RES_TOPPIECE };
+    bottomPiece = ResourceTexture{ RES_BOTTOMPIECE };
+    rightPiece = ResourceTexture{ RES_RIGHTPIECE };
+    leftPiece = ResourceTexture{ RES_LEFTPIECE };
+
     Sprites::centerPiece1 = CreateSprite(centerPiece1);
     Sprites::centerPiece2 = CreateSprite(centerPiece2);
 
@@ -429,16 +449,16 @@ FloatRect getGlobalBounds(const smk::Sprite& sprite)
     };
 
     // Compute the bounding rectangle of the transformed points
-    float left = std::get<0>(points[0]);
-    float top = std::get<1>(points[0]);
-    float right = std::get<0>(points[0]);
-    float bottom = std::get<1>(points[0]);
+    float left = points[0].x;
+    float top = points[0].y;
+    float right = points[0].x;
+    float bottom = points[0].y;
     for (int i = 1; i < 4; ++i)
     {
-        if (std::get<0>(points[i]) < left)   left = std::get<0>(points[i]);
-        else if (std::get<0>(points[i]) > right)  right = std::get<0>(points[i]);
-        if (std::get<1>(points[i]) < top)    top = std::get<1>(points[i]);
-        else if (std::get<1>(points[i]) > bottom) bottom = std::get<1>(points[i]);
+        if (points[i].x < left)   left = points[i].x;
+        else if (points[i].x > right)  right = points[i].x;
+        if (points[i].y < top)    top = points[i].y;
+        else if (points[i].y > bottom) bottom = points[i].y;
     }
 
     return FloatRect(left, top, right - left, bottom - top);
@@ -455,10 +475,10 @@ bool Common::SpritesIntersect(const smk::Sprite& A, const smk::Sprite& B, Vector
     auto rectB = getGlobalBounds(B);
 
     //Scale their bounds by the specified scale factor
-    rectA.left *= std::get<0>(scaleFactor);
-    rectA.top *= std::get<1>(scaleFactor);
-    rectB.top *= std::get<1>(scaleFactor);
-    rectB.left *= std::get<0>(scaleFactor);
+    rectA.left *= scaleFactor.x;
+    rectA.top *= scaleFactor.y;
+    rectB.top *= scaleFactor.y;
+    rectB.left *= scaleFactor.x;
 
     //Check if they intersect
     return Math::RectsIntersect(rectA, rectB);
@@ -481,47 +501,47 @@ bool Common::SpritesIntersect(const smk::Sprite& A, const smk::Sprite& B, bool s
         auto textureRect = Rect<int>(0,0,A.texture().width(), A.texture().height());
         //auto textureRect = A.getTextureRect();
         //Set the scale factor to the texture rect
-        std::get<0>(scaleFactor) = textureRect.width;
-        std::get<1>(scaleFactor) = textureRect.height;
+        scaleFactor.x = textureRect.width;
+        scaleFactor.y = textureRect.height;
     }
 
     return Common::SpritesIntersect(A, B, scaleFactor);
 }
 
 //Refreshes the size of the window. This is normally used when the window gets resized
-void Common::RefreshWindow(smk::Window& window)
+void Common::RefreshWindow(std::shared_ptr<smk::Window>& window)
 {
     //Get the current window view
-    auto view = window.view();
+    auto view = window->view();
     //Reset the view's size
     //view.SetSize(static_cast<smk::Vector2f>(window.getSize() / 3u));
-    view.SetSize(window.width() / 3, window.height() / 3);
+    view.SetSize(window->width() / 3, window->height() / 3);
     //Set the window's view to the new one
-    window.SetView(view);
+    window->SetView(view);
 
 }
 
 //Gets the mouse position in world coordinates
-Vector2f Common::GetMouseWorldCoordinates(smk::Window& window)
+Vector2f Common::GetMouseWorldCoordinates(std::shared_ptr<smk::Window>& window)
 {
     //Gets the mouse's desktop position, subtracts the window position to get the window position of the mouse, and then maps that position to world coordinates
     //return window.mapPixelToCoords(Mouse::getPosition() - window.getPosition());
     //auto mousePos = smk::Input::mouse();
-    auto mousePos = window.input().cursor();
+    auto mousePos = window->input().cursor();
 
     return Vector2f(mousePos.x,mousePos.y);
 }
 
 //Centers the camera over a specified point
-void Common::CenterCamera(Vector2f center, smk::Window& window)
+void Common::CenterCamera(Vector2f center, std::shared_ptr<smk::Window>& window)
 {
     //Get the currently set view
-    auto view = window.view();
+    auto view = window->view();
 
-    view.SetCenter(std::get<0>(center), std::get<1>(center));
+    view.SetCenter(center.x, center.y);
 
     //Update the window's view with the new view
-    window.SetView(view);
+    window->SetView(view);
 }
 
 
