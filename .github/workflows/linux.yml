@@ -14,12 +14,7 @@ jobs:
     - name: Checkout code including submodules
       uses: actions/checkout@v2
       with:
-        fetch-depth: 2  # fetch the last 2 commits to retrieve submodules
-
-    - name: Set up GCC
-      uses: actions/setup-gcc@v2
-      with:
-        gcc-version: '11'
+        submodules: 'true'
 
     - name: Install dependencies
       run: sudo apt-get update && sudo apt-get install -y build-essential zip
@@ -37,7 +32,7 @@ jobs:
         zip -r ../release_linux.zip .
 
     - name: Upload artifact
-      uses: actions-js/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: release_linux
         path: release_linux.zip
