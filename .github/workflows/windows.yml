@@ -37,7 +37,6 @@ jobs:
       run: |
         cd build
         zip -r ../release_windows.zip .
-      path: ./
 
     - name: Upload artifact
       uses: actions-js/upload-artifact@v2
