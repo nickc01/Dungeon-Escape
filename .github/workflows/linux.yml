@@ -23,16 +23,11 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF
         cmake --build . --verbose
-
-    - name: Zip artifacts
-      run: |
-        cd build
-        zip -r ../release_linux.zip .
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: release_linux
-        path: release_linux.zip
+        path: build
