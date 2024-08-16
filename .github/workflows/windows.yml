@@ -16,25 +16,18 @@ jobs:
       with:
         submodules: 'true' 
 
-    - name: Set up Compiler
-      uses: rlalik/setup-cpp-compiler@master
-      with:
-        compiler: latest
-
-    - name: Install dependencies
-      run: |
-        choco feature enable -n all
-        choco install -y cmake git zip
-
     - name: Configure and build with CMake
       run: |
         mkdir build
         cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release
         cmake --build . --verbose
+        cd bin/Release
+        move resources Debug
+
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: release_windows
-        path: build
+        path: build/bin/Release/Debug
