@@ -17,7 +17,7 @@ jobs:
         submodules: 'true'
 
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y build-essential zip libxrandr-dev
+      run: sudo apt-get update && sudo apt-get install -y build-essential zip libxrandr-dev libglew-dev
 
     - name: Configure and build with CMake
       run: |
