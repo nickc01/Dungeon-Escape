@@ -14,12 +14,12 @@ jobs:
     - name: Checkout code including submodules
       uses: actions/checkout@v2
       with:
-        fetch-depth: 2  # fetch the last 2 commits to get submodules.
+        submodules: 'true' 
 
-    - name: Set up MinGW-w64
-      uses: actions-mingw/setup-mingw@v2
+    - name: Set up Compiler
+      uses: rlalik/setup-cpp-compiler@master
       with:
-        version: 'x86_64-8.1.0-posix-seh-rt_v6-rev0'
+        compiler: latest
 
     - name: Install dependencies
       run: |
@@ -30,16 +30,11 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+        cmake .. -DCMAKE_BUILD_TYPE=Release
         cmake --build . --verbose
 
-    - name: Zip artifacts
-      run: |
-        cd build
-        zip -r ../release_windows.zip .
-
     - name: Upload artifact
-      uses: actions-js/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: release_windows
-        path: release_windows.zip
+        path: build
