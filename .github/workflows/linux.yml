@@ -1,0 +1,44 @@
+name: Linux CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build on Linux
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code including submodules
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 2  # fetch the last 2 commits to retrieve submodules
+
+    - name: Set up GCC
+      uses: actions/setup-gcc@v2
+      with:
+        gcc-version: '11'
+
+    - name: Install dependencies
+      run: sudo apt-get update && sudo apt-get install -y build-essential zip
+
+    - name: Configure and build with CMake
+      run: |
+        mkdir build &&~*
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --verbose
+
+    - name: Zip artifacts
+      run: |
+        cd build
+        zip -r ../release_linux.zip .
+      path: ./
+
+    - name: Upload artifact
+      uses: actions-js/upload-artifact@v2
+      with:
+        name: release_linux
+        path: release_linux.zip

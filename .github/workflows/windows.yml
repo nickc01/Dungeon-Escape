@@ -1,0 +1,46 @@
+name: Windows CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build on Windows
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code including submodules
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 2  # fetch the last 2 commits to get submodules.
+
+    - name: Set up MinGW-w64
+      uses: actions-mingw/setup-mingw@v2
+      with:
+        version: 'x86_64-8.1.0-posix-seh-rt_v6-rev0'
+
+    - name: Install dependencies
+      run: |
+        choco feature enable -n all
+        choco install -y cmake git zip
+
+    - name: Configure and build with CMake
+      run: |
+        mkdir build
+        cd build
+        cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --verbose
+
+    - name: Zip artifacts
+      run: |
+        cd build
+        zip -r ../release_windows.zip .
+      path: ./
+
+    - name: Upload artifact
+      uses: actions-js/upload-artifact@v2
+      with:
+        name: release_windows
+        path: release_windows.zip
